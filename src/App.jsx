@@ -24,8 +24,11 @@ const DATE_STATUSES = [
 ]
 
 const works = [...worksData.works].sort((a, b) => a.displayOrder - b.displayOrder)
-const eventId =
-  new URLSearchParams(window.location.search).get('event') || 'default-event'
+
+function getEventIdFromUrl() {
+  const params = new URLSearchParams(window.location.search)
+  return params.get('event')?.trim() || 'default-event'
+}
 
 function createMember() {
   return {
@@ -46,6 +49,8 @@ function countStatuses(member) {
 }
 
 export default function App() {
+  const [eventId, setEventId] = useState(getEventIdFromUrl())
+  const [eventInput, setEventInput] = useState(getEventIdFromUrl())
   const [members, setMembers] = useState([])
   const [dates, setDates] = useState([])
   const [activeTab, setActiveTab] = useState('members')
@@ -56,6 +61,8 @@ export default function App() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    setLoading(true)
+
     const membersRef = collection(db, 'events', eventId, 'members')
     const datesRef = collection(db, 'events', eventId, 'dates')
 
@@ -72,6 +79,7 @@ export default function App() {
           const bTime = b.createdAt?.seconds || 0
           return aTime - bTime
         })
+
       setMembers(rows)
       setLoading(false)
     })
@@ -87,6 +95,7 @@ export default function App() {
           const bTime = b.createdAt?.seconds || 0
           return aTime - bTime
         })
+
       setDates(rows)
     })
 
@@ -94,7 +103,7 @@ export default function App() {
       unsubscribeMembers()
       unsubscribeDates()
     }
-  }, [])
+  }, [eventId])
 
   const worksWithPeople = useMemo(() => {
     return works.map((work) => {
@@ -214,6 +223,30 @@ export default function App() {
     await deleteDoc(doc(db, 'events', eventId, 'dates', dateId))
   }
 
+  function moveToEvent() {
+    const nextEventId = eventInput.trim()
+    if (!nextEventId) {
+      alert('募集IDを入力してください')
+      return
+    }
+
+    const nextUrl = `${window.location.pathname}?event=${encodeURIComponent(nextEventId)}`
+    window.history.replaceState({}, '', nextUrl)
+    setEventId(nextEventId)
+    setEditorOpen(false)
+    setActiveTab('members')
+  }
+
+  async function copyShareUrl() {
+    const shareUrl = `${window.location.origin}${window.location.pathname}?event=${encodeURIComponent(eventId)}`
+    try {
+      await navigator.clipboard.writeText(shareUrl)
+      alert('共有URLをコピーしました')
+    } catch {
+      alert(shareUrl)
+    }
+  }
+
   const memberCount = members.length
   const playedTotal = members.reduce(
     (sum, member) => sum + countStatuses(member).played,
@@ -231,19 +264,18 @@ export default function App() {
           <p className="eyebrow">Group SNE Murder Mystery Planner</p>
           <h1>グループSNEマダミス調整</h1>
           <p className="hero-copy">
-            参加者の追加・編集、作品状況、候補日調整を Firestore に保存する版です。
+            募集IDごとに参加者・作品状況・候補日を分けて管理できます。
           </p>
-          <p className="hero-copy">共有URL用イベントID: {eventId}</p>
         </div>
 
         <div className="hero-stats">
           <article className="stat-card">
-            <span>参加者</span>
-            <strong>{memberCount}</strong>
+            <span>募集ID</span>
+            <strong>{eventId}</strong>
           </article>
           <article className="stat-card">
-            <span>やった登録</span>
-            <strong>{playedTotal}</strong>
+            <span>参加者</span>
+            <strong>{memberCount}</strong>
           </article>
           <article className="stat-card">
             <span>やりたい登録</span>
@@ -251,6 +283,28 @@ export default function App() {
           </article>
         </div>
       </header>
+
+      <section className="panel event-switcher">
+        <div>
+          <h2>募集を切り替える</h2>
+          <p>例: test1 / 2026-06-01 / nagoya-night</p>
+        </div>
+
+        <div className="event-switcher-row">
+          <input
+            className="text-input"
+            value={eventInput}
+            onChange={(e) => setEventInput(e.target.value)}
+            placeholder="募集IDを入力"
+          />
+          <button className="primary-button" onClick={moveToEvent}>
+            開く
+          </button>
+          <button className="ghost-button" onClick={copyShareUrl}>
+            URLをコピー
+          </button>
+        </div>
+      </section>
 
       <nav className="tab-bar" aria-label="主要タブ">
         {[
@@ -274,7 +328,7 @@ export default function App() {
             <div className="panel panel-header">
               <div>
                 <h2>参加者</h2>
-                <p>追加・編集内容は Firestore に保存されます。</p>
+                <p>この募集IDの参加者だけが表示されます。</p>
               </div>
               <button className="primary-button" onClick={openAddMember}>
                 参加者を追加
@@ -284,12 +338,12 @@ export default function App() {
             {loading ? (
               <div className="panel empty-state">
                 <h3>読み込み中</h3>
-                <p>Firestore から参加者を取得しています。</p>
+                <p>募集データを取得しています。</p>
               </div>
             ) : members.length === 0 ? (
               <div className="panel empty-state">
                 <h3>まだ参加者がいません</h3>
-                <p>最初の1人を追加してください。</p>
+                <p>この募集IDで最初の1人を追加してください。</p>
               </div>
             ) : (
               members.map((member) => {
@@ -333,7 +387,7 @@ export default function App() {
             <div className="panel panel-header">
               <div>
                 <h2>作品一覧</h2>
-                <p>作品ごとに誰がやったか、誰がやりたいかを見られます。</p>
+                <p>今開いている募集IDの集計です。</p>
               </div>
             </div>
 
@@ -342,9 +396,7 @@ export default function App() {
                 <div className="work-head">
                   <div>
                     <h3>{work.title}</h3>
-                    <p>
-                      {work.playerCountText}・{work.durationMin}分
-                    </p>
+                    <p>{work.playerCountText}・{work.durationMin}分</p>
                   </div>
                   <span className="work-id">{work.id}</span>
                 </div>
@@ -352,19 +404,11 @@ export default function App() {
                 <div className="status-grid">
                   <div>
                     <h4>やった</h4>
-                    <p>
-                      {work.playedBy.length
-                        ? work.playedBy.join('、')
-                        : 'まだいません'}
-                    </p>
+                    <p>{work.playedBy.length ? work.playedBy.join('、') : 'まだいません'}</p>
                   </div>
                   <div>
                     <h4>やりたい</h4>
-                    <p>
-                      {work.wantedBy.length
-                        ? work.wantedBy.join('、')
-                        : 'まだいません'}
-                    </p>
+                    <p>{work.wantedBy.length ? work.wantedBy.join('、') : 'まだいません'}</p>
                   </div>
                 </div>
               </article>
@@ -377,7 +421,7 @@ export default function App() {
             <div className="panel panel-header schedule-header">
               <div>
                 <h2>日程調整</h2>
-                <p>候補日は共有され、参加者ごとに ○ △ × を登録できます。</p>
+                <p>候補日も募集IDごとに分かれます。</p>
               </div>
 
               <div className="date-add-box">
@@ -392,10 +436,10 @@ export default function App() {
               </div>
             </div>
 
-            {scheduleSummary.length === 0 ? (
+            {dates.length === 0 ? (
               <div className="panel empty-state">
                 <h3>候補日がありません</h3>
-                <p>まず1件追加してください。</p>
+                <p>この募集IDで候補日を追加してください。</p>
               </div>
             ) : (
               scheduleSummary.map((date) => (
@@ -403,7 +447,7 @@ export default function App() {
                   <div className="member-head">
                     <div>
                       <h3>{date.label}</h3>
-                      <p>参加者編集画面から可否を選択します。</p>
+                      <p>参加者編集画面から可否を選びます。</p>
                     </div>
                     <button
                       className="ghost-button danger"
@@ -482,9 +526,7 @@ export default function App() {
                   <article className="mini-work-card" key={work.id}>
                     <div>
                       <h4>{work.title}</h4>
-                      <p>
-                        {work.playerCountText}・{work.durationMin}分
-                      </p>
+                      <p>{work.playerCountText}・{work.durationMin}分</p>
                     </div>
 
                     <div className="segmented-row">
