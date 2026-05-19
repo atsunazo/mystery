@@ -951,4 +951,615 @@ button { cursor: pointer; }
     min-width: 46px;
   }
 }
+
+.matrix-table {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: max-content;
+  min-width: 100%;
+  background: #fff;
+  table-layout: auto;
+}
+
+.sticky-col {
+  position: sticky;
+  left: 0;
+  z-index: 3;
+  background: #fffdfa !important;
+  box-shadow: 4px 0 8px rgba(45, 38, 26, 0.05);
+}
+
+.matrix-title-cell {
+  width: 1%;
+  min-width: unset;
+  max-width: unset;
+  white-space: nowrap;
+  text-align: left !important;
+  padding: 12px 10px 12px 10px !important;
+}
+
+.matrix-work-link {
+  display: inline-block;
+  width: auto;
+  min-width: 0;
+  max-width: none;
+  white-space: nowrap;
+  text-align: left;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  font-weight: 700;
+  line-height: 1.4;
+  padding: 0;
+}
+
+.matrix-table-scrollable th,
+.matrix-table-scrollable td {
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  padding: 12px 8px;
+  text-align: center;
+  background: #fff;
+  white-space: nowrap;
+}
+
+.member-head-cell,
+.matrix-symbol-cell {
+  min-width: 56px;
+}
+
+.matrix-panel {
+  padding: 10px;
+}
+
+.matrix-wrap {
+  overflow-x: auto;
+  overflow-y: visible;
+  -webkit-overflow-scrolling: touch;
+  border-radius: 16px;
+}
+
+.matrix-table {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: max-content;
+  min-width: 100%;
+  background: #fff;
+  table-layout: auto;
+}
+
+.matrix-table-scrollable th,
+.matrix-table-scrollable td {
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  padding: 8px 6px;
+  text-align: center;
+  background: #fff;
+  white-space: nowrap;
+}
+
+.matrix-table-scrollable thead th {
+  position: sticky;
+  top: 0;
+  z-index: 4;
+  background: #f1ede6;
+  font-weight: 700;
+}
+
+.matrix-table-scrollable tr:first-child th {
+  border-top: 1px solid var(--line);
+}
+
+.matrix-table-scrollable tr td:first-child,
+.matrix-table-scrollable tr th:first-child {
+  border-left: 1px solid var(--line);
+}
+
+.sticky-col {
+  position: sticky;
+  left: 0;
+  z-index: 3;
+  background: #fffdfa !important;
+  box-shadow: 4px 0 8px rgba(45, 38, 26, 0.05);
+}
+
+.sticky-head {
+  z-index: 5 !important;
+  background: #ece6dc !important;
+}
+
+/* 作品列は文字ぴったり */
+.matrix-title-cell {
+  width: 1%;
+  min-width: unset;
+  max-width: unset;
+  white-space: nowrap;
+  text-align: left !important;
+  padding: 8px 10px !important;
+}
+
+.matrix-work-link {
+  display: inline-block;
+  width: auto;
+  min-width: 0;
+  max-width: none;
+  white-space: nowrap;
+  text-align: left;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  font-weight: 700;
+  line-height: 1.35;
+  padding: 0;
+}
+
+/* 参加者列をできる限り狭く */
+.member-head-cell {
+  width: 1%;
+  min-width: 40px;
+  max-width: 40px;
+  padding: 8px 4px !important;
+  font-size: 12px;
+  line-height: 1.1;
+}
+
+/* 記号セルも最小限 */
+.matrix-symbol-cell {
+  width: 1%;
+  min-width: 40px;
+  max-width: 40px;
+  padding: 8px 4px !important;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.matrix-symbol-cell.played {
+  background: #f3d8dc;
+  color: var(--ng);
+}
+
+.matrix-symbol-cell.wanted {
+  background: #f7ebc7;
+  color: #9a5a00;
+}
+
+.matrix-symbol-cell.neutral {
+  background: #ece7de;
+  color: var(--muted);
+}
+
+/* 合計列も細く */
+.total-head,
+.matrix-total-cell {
+  width: 1%;
+  min-width: 34px;
+  max-width: 34px;
+  padding: 8px 4px !important;
+  font-size: 12px;
+}
+
+.matrix-total-cell {
+  font-weight: 800;
+  background: #faf7f2 !important;
+}
+
+.wanted-total {
+  color: #9a5a00;
+}
+
+.neutral-total {
+  color: var(--muted);
+}
+
+.played-total {
+  color: var(--ng);
+}
+
+.matrix-panel {
+  padding: 8px;
+}
+
+.matrix-hint {
+  margin-bottom: 8px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.matrix-wrap {
+  overflow-x: auto;
+  overflow-y: visible;
+  -webkit-overflow-scrolling: touch;
+  border-radius: 12px;
+}
+
+.matrix-table.compact-matrix {
+  border-collapse: separate;
+  border-spacing: 0;
+  table-layout: fixed;
+  width: max-content;
+  min-width: 0;
+  max-width: none;
+  display: inline-table;
+  background: #fff;
+}
+
+.col-work {
+  width: auto;
+}
+
+.col-total {
+  width: 22px;
+}
+
+.col-member {
+  width: 24px;
+}
+
+.matrix-table-scrollable th,
+.matrix-table-scrollable td {
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  padding: 4px 2px;
+  text-align: center;
+  background: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.matrix-table-scrollable thead th {
+  position: sticky;
+  top: 0;
+  z-index: 4;
+  background: #f1ede6;
+  font-weight: 700;
+}
+
+.matrix-table-scrollable tr:first-child th {
+  border-top: 1px solid var(--line);
+}
+
+.matrix-table-scrollable tr td:first-child,
+.matrix-table-scrollable tr th:first-child {
+  border-left: 1px solid var(--line);
+}
+
+.sticky-col {
+  position: sticky;
+  left: 0;
+  z-index: 3;
+  background: #fffdfa !important;
+  box-shadow: 2px 0 6px rgba(45, 38, 26, 0.05);
+}
+
+.sticky-head {
+  z-index: 5 !important;
+  background: #ece6dc !important;
+}
+
+.matrix-title-cell {
+  width: fit-content;
+  min-width: fit-content;
+  max-width: fit-content;
+  padding: 4px 8px !important;
+  text-align: left !important;
+  white-space: nowrap;
+}
+
+.matrix-work-link {
+  display: inline-block;
+  width: auto;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  font-weight: 700;
+  font-size: 12px;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.total-head,
+.matrix-total-cell {
+  width: 22px;
+  min-width: 22px;
+  max-width: 22px;
+  padding: 4px 1px !important;
+  font-size: 10px;
+  line-height: 1;
+}
+
+.matrix-total-cell {
+  font-weight: 800;
+  background: #faf7f2 !important;
+}
+
+.wanted-total {
+  color: #9a5a00;
+}
+
+.neutral-total {
+  color: var(--muted);
+}
+
+.played-total {
+  color: var(--ng);
+}
+
+.member-head-cell {
+  width: 24px;
+  min-width: 24px;
+  max-width: 24px;
+  padding: 4px 1px !important;
+  font-size: 10px;
+  line-height: 1;
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+}
+
+.matrix-symbol-cell {
+  width: 24px;
+  min-width: 24px;
+  max-width: 24px;
+  padding: 4px 1px !important;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.matrix-symbol-cell.played {
+  background: #f3d8dc;
+  color: var(--ng);
+}
+
+.matrix-symbol-cell.wanted {
+  background: #f7ebc7;
+  color: #9a5a00;
+}
+
+.matrix-symbol-cell.neutral {
+  background: #ece7de;
+  color: var(--muted);
+}
+
+@media (min-width: 641px) {
+  .col-total {
+    width: 24px;
+  }
+
+  .col-member {
+    width: 28px;
+  }
+
+  .total-head,
+  .matrix-total-cell {
+    width: 24px;
+    min-width: 24px;
+    max-width: 24px;
+    font-size: 11px;
+  }
+
+  .member-head-cell {
+    width: 28px;
+    min-width: 28px;
+    max-width: 28px;
+    font-size: 11px;
+  }
+
+  .matrix-symbol-cell {
+    width: 28px;
+    min-width: 28px;
+    max-width: 28px;
+    font-size: 15px;
+  }
+
+  .matrix-work-link {
+    font-size: 13px;
+  }
+}
+
+.matrix-panel {
+  padding: 8px;
+}
+
+.matrix-hint {
+  margin-bottom: 8px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.matrix-wrap {
+  overflow-x: auto;
+  overflow-y: visible;
+  -webkit-overflow-scrolling: touch;
+  border-radius: 12px;
+}
+
+.matrix-table.compact-matrix {
+  border-collapse: separate;
+  border-spacing: 0;
+  table-layout: fixed;
+  width: max-content;
+  min-width: 0;
+  max-width: none;
+  display: inline-table;
+  background: #fff;
+}
+
+.col-work {
+  width: auto;
+}
+
+.col-total {
+  width: 26px;
+}
+
+.col-member {
+  width: 44px;
+}
+
+.matrix-table-scrollable th,
+.matrix-table-scrollable td {
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  padding: 4px 3px;
+  text-align: center;
+  background: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.matrix-table-scrollable thead th {
+  position: sticky;
+  top: 0;
+  z-index: 4;
+  background: #f1ede6;
+  font-weight: 700;
+}
+
+.matrix-table-scrollable tr:first-child th {
+  border-top: 1px solid var(--line);
+}
+
+.matrix-table-scrollable tr td:first-child,
+.matrix-table-scrollable tr th:first-child {
+  border-left: 1px solid var(--line);
+}
+
+.sticky-col {
+  position: sticky;
+  left: 0;
+  z-index: 3;
+  background: #fffdfa !important;
+  box-shadow: 2px 0 6px rgba(45, 38, 26, 0.05);
+}
+
+.sticky-head {
+  z-index: 5 !important;
+  background: #ece6dc !important;
+}
+
+.matrix-title-cell {
+  width: fit-content;
+  min-width: fit-content;
+  max-width: fit-content;
+  padding: 4px 8px !important;
+  text-align: left !important;
+  white-space: nowrap;
+}
+
+.matrix-work-link {
+  display: inline-block;
+  width: auto;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  font-weight: 700;
+  font-size: 12px;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.total-head,
+.matrix-total-cell {
+  width: 26px;
+  min-width: 26px;
+  max-width: 26px;
+  padding: 4px 2px !important;
+  font-size: 10px;
+  line-height: 1;
+}
+
+.matrix-total-cell {
+  font-weight: 800;
+  background: #faf7f2 !important;
+}
+
+.wanted-total {
+  color: #9a5a00;
+}
+
+.neutral-total {
+  color: var(--muted);
+}
+
+.played-total {
+  color: var(--ng);
+}
+
+/* ここを横書きにする */
+.member-head-cell {
+  width: 44px;
+  min-width: 44px;
+  max-width: 44px;
+  padding: 4px 3px !important;
+  font-size: 10px;
+  line-height: 1.1;
+  writing-mode: horizontal-tb;
+  text-orientation: mixed;
+  white-space: nowrap;
+}
+
+.matrix-symbol-cell {
+  width: 44px;
+  min-width: 44px;
+  max-width: 44px;
+  padding: 4px 3px !important;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.matrix-symbol-cell.played {
+  background: #f3d8dc;
+  color: var(--ng);
+}
+
+.matrix-symbol-cell.wanted {
+  background: #f7ebc7;
+  color: #9a5a00;
+}
+
+.matrix-symbol-cell.neutral {
+  background: #ece7de;
+  color: var(--muted);
+}
+
+@media (max-width: 640px) {
+  .col-total {
+    width: 24px;
+  }
+
+  .col-member {
+    width: 38px;
+  }
+
+  .total-head,
+  .matrix-total-cell {
+    width: 24px;
+    min-width: 24px;
+    max-width: 24px;
+    font-size: 10px;
+  }
+
+  .member-head-cell {
+    width: 38px;
+    min-width: 38px;
+    max-width: 38px;
+    font-size: 9px;
+    padding: 4px 2px !important;
+  }
+
+  .matrix-symbol-cell {
+    width: 38px;
+    min-width: 38px;
+    max-width: 38px;
+    font-size: 12px;
+  }
+
+  .matrix-work-link {
+    font-size: 12px;
+  }
+}
 }

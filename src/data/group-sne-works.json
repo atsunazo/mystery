@@ -8,7 +8,7 @@
       "playerMin": 6,
       "playerMax": 7,
       "durationMin": 150,
-      "brand": "グループSNE"
+      "brand": "ｸﾞﾙｰﾌﾟSNE"
     },
     {
       "id": "work-002",
@@ -18,17 +18,17 @@
       "playerMin": 7,
       "playerMax": 8,
       "durationMin": 120,
-      "brand": "グループSNE"
+      "brand": "ｸﾞﾙｰﾌﾟSNE"
     },
     {
       "id": "work-003",
       "displayOrder": 3,
-      "title": "ダークユールに贖いを",
+      "title": "ﾀﾞｰｸﾕｰﾙに贖いを",
       "playerCountText": "7〜9人",
       "playerMin": 7,
       "playerMax": 9,
       "durationMin": 180,
-      "brand": "グループSNE"
+      "brand": "ｸﾞﾙｰﾌﾟSNE"
     },
     {
       "id": "work-004",
@@ -38,7 +38,7 @@
       "playerMin": 6,
       "playerMax": 7,
       "durationMin": 150,
-      "brand": "グループSNE"
+      "brand": "ｸﾞﾙｰﾌﾟSNE"
     },
     {
       "id": "work-005",
@@ -48,7 +48,7 @@
       "playerMin": 8,
       "playerMax": 9,
       "durationMin": 180,
-      "brand": "グループSNE"
+      "brand": "ｸﾞﾙｰﾌﾟSNE"
     },
     {
       "id": "work-006",
@@ -58,37 +58,37 @@
       "playerMin": 6,
       "playerMax": 7,
       "durationMin": 150,
-      "brand": "グループSNE"
+      "brand": "ｸﾞﾙｰﾌﾟSNE"
     },
     {
       "id": "work-007",
       "displayOrder": 7,
-      "title": "ホワイト・レイブン、レッド・ダイ",
+      "title": "ﾎﾜｲﾄ･ﾚｲﾌﾞﾝ、ﾚｯﾄﾞ･ﾀﾞｲ",
       "playerCountText": "6〜7人",
       "playerMin": 6,
       "playerMax": 7,
       "durationMin": 150,
-      "brand": "グループSNE"
+      "brand": "ｸﾞﾙｰﾌﾟSNE"
     },
     {
       "id": "work-008",
       "displayOrder": 8,
-      "title": "マーダーミステリー・オブ・ザ・デッド",
+      "title": "ﾏｰﾀﾞｰﾐｽﾃﾘｰ･ｵﾌﾞ･ｻﾞ･ﾃﾞｯﾄﾞ",
       "playerCountText": "7〜8人",
       "playerMin": 7,
       "playerMax": 8,
       "durationMin": 180,
-      "brand": "グループSNE"
+      "brand": "ｸﾞﾙｰﾌﾟSNE"
     },
     {
       "id": "work-009",
       "displayOrder": 9,
-      "title": "奇想、アムネジア",
+      "title": "奇想、ｱﾑﾈｼﾞｱ",
       "playerCountText": "7人",
       "playerMin": 7,
       "playerMax": 7,
       "durationMin": 150,
-      "brand": "グループSNE"
+      "brand": "ｸﾞﾙｰﾌﾟSNE"
     },
     {
       "id": "work-010",
@@ -98,7 +98,7 @@
       "playerMin": 6,
       "playerMax": 7,
       "durationMin": 180,
-      "brand": "グループSNE"
+      "brand": "ｸﾞﾙｰﾌﾟSNE"
     },
     {
       "id": "work-011",
@@ -108,7 +108,7 @@
       "playerMin": 6,
       "playerMax": 8,
       "durationMin": 180,
-      "brand": "グループSNE"
+      "brand": "ｸﾞﾙｰﾌﾟSNE"
     },
     {
       "id": "work-012",
@@ -118,7 +118,7 @@
       "playerMin": 6,
       "playerMax": 6,
       "durationMin": 180,
-      "brand": "グループSNE"
+      "brand": "ｸﾞﾙｰﾌﾟSNE"
     },
     {
       "id": "work-013",
@@ -128,7 +128,7 @@
       "playerMin": 5,
       "playerMax": 6,
       "durationMin": 150,
-      "brand": "グループSNE"
+      "brand": "ｸﾞﾙｰﾌﾟSNE"
     },
     {
       "id": "work-014",
@@ -138,7 +138,7 @@
       "playerMin": 5,
       "playerMax": 6,
       "durationMin": 150,
-      "brand": "グループSNE"
+      "brand": "ｸﾞﾙｰﾌﾟSNE"
     },
     {
       "id": "work-015",
@@ -148,37 +148,37 @@
       "playerMin": 6,
       "playerMax": 7,
       "durationMin": 150,
-      "brand": "グループSNE"
+      "brand": "ｸﾞﾙｰﾌﾟSNE"
     },
     {
       "id": "work-016",
       "displayOrder": 16,
-      "title": "ゲノムの塔",
+      "title": "ｹﾞﾉﾑの塔",
       "playerCountText": "7人",
       "playerMin": 7,
       "playerMax": 7,
       "durationMin": 180,
-      "brand": "グループSNE"
+      "brand": "ｸﾞﾙｰﾌﾟSNE"
     },
     {
       "id": "work-017",
       "displayOrder": 17,
-      "title": "死に浸かるワイナリー",
+      "title": "死に浸かるﾜｲﾅﾘｰ",
       "playerCountText": "5〜6人",
       "playerMin": 5,
       "playerMax": 6,
       "durationMin": 150,
-      "brand": "グループSNE"
+      "brand": "ｸﾞﾙｰﾌﾟSNE"
     },
     {
       "id": "work-018",
       "displayOrder": 18,
-      "title": "マーダーミステリー：ザ・トリロジー",
+      "title": "ﾏｰﾀﾞｰﾐｽﾃﾘｰ：ｻﾞ･ﾄﾘﾛｼﾞｰ",
       "playerCountText": "6人",
       "playerMin": 6,
       "playerMax": 6,
       "durationMin": 360,
-      "brand": "グループSNE"
+      "brand": "ｸﾞﾙｰﾌﾟSNE"
     },
     {
       "id": "work-019",
@@ -188,27 +188,27 @@
       "playerMin": 6,
       "playerMax": 6,
       "durationMin": 150,
-      "brand": "グループSNE"
+      "brand": "ｸﾞﾙｰﾌﾟSNE"
     },
     {
       "id": "work-020",
       "displayOrder": 20,
-      "title": "マーダーミステリー・オブ・ザ・デッド0",
+      "title": "ﾏｰﾀﾞｰﾐｽﾃﾘｰ･ｵﾌﾞ･ｻﾞ･ﾃﾞｯﾄﾞ0",
       "playerCountText": "7〜8人",
       "playerMin": 7,
       "playerMax": 8,
       "durationMin": 150,
-      "brand": "グループSNE"
+      "brand": "ｸﾞﾙｰﾌﾟSNE"
     },
     {
       "id": "work-021",
       "displayOrder": 21,
-      "title": "アルバトロスの黄金の雨",
+      "title": "ｱﾙﾊﾞﾄﾛｽの黄金の雨",
       "playerCountText": "5〜6人",
       "playerMin": 5,
       "playerMax": 6,
       "durationMin": 180,
-      "brand": "グループSNE"
+      "brand": "ｸﾞﾙｰﾌﾟSNE"
     },
     {
       "id": "work-022",
@@ -218,7 +218,7 @@
       "playerMin": 6,
       "playerMax": 7,
       "durationMin": 150,
-      "brand": "グループSNE"
+      "brand": "ｸﾞﾙｰﾌﾟSNE"
     },
     {
       "id": "work-023",
@@ -228,7 +228,7 @@
       "playerMin": 5,
       "playerMax": 6,
       "durationMin": 180,
-      "brand": "グループSNE"
+      "brand": "ｸﾞﾙｰﾌﾟSNE"
     },
     {
       "id": "work-024",
@@ -238,17 +238,17 @@
       "playerMin": 6,
       "playerMax": 7,
       "durationMin": 180,
-      "brand": "グループSNE"
+      "brand": "ｸﾞﾙｰﾌﾟSNE"
     },
     {
       "id": "work-025",
       "displayOrder": 25,
-      "title": "ペンタグラムの境域",
+      "title": "ﾍﾟﾝﾀｸﾞﾗﾑの境域",
       "playerCountText": "6人",
       "playerMin": 6,
       "playerMax": 6,
       "durationMin": 180,
-      "brand": "グループSNE"
+      "brand": "ｸﾞﾙｰﾌﾟSNE"
     },
     {
       "id": "work-026",
@@ -258,7 +258,7 @@
       "playerMin": 6,
       "playerMax": 6,
       "durationMin": 180,
-      "brand": "グループSNE"
+      "brand": "ｸﾞﾙｰﾌﾟSNE"
     },
     {
       "id": "work-027",
@@ -268,7 +268,7 @@
       "playerMin": 6,
       "playerMax": 6,
       "durationMin": 150,
-      "brand": "グループSNE"
+      "brand": "ｸﾞﾙｰﾌﾟSNE"
     }
   ],
   "meta": {

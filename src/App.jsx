@@ -591,81 +591,94 @@ export default function App() {
           </section>
         )}
 
-                {activeTab === 'matrix' && (
-          <section className="panel-stack">
-            <div className="panel panel-header">
-              <div>
-                <h2>希望マトリックス</h2>
-                <p>作品を左に固定し、右側の参加者列は横スライドで確認できます。</p>
-              </div>
-            </div>
+        {activeTab === 'matrix' && (
+  <section className="panel-stack">
+    <div className="panel panel-header">
+      <div>
+        <h2>希望マトリックス</h2>
+        <p>作品名の右に合計、その右に各参加者の状況を表示します。</p>
+      </div>
+    </div>
 
-            <div className="panel matrix-panel">
-              <div className="matrix-hint">
-                <span>← 横にスライドして参加者ごとの状況を確認</span>
-              </div>
+    <div className="panel matrix-panel">
+      <div className="matrix-hint">
+        <span>← 横にスライドして個別状況を確認</span>
+      </div>
 
-              <div className="matrix-wrap">
-                <table className="matrix-table matrix-table-scrollable">
-                  <thead>
-                    <tr>
-                      <th className="sticky-col sticky-head">作品</th>
-                      {members.map((member) => (
-                        <th key={member.id} className="member-head-cell">{member.name}</th>
-                      ))}
-                      <th className="total-head">○</th>
-                      <th className="total-head">△</th>
-                      <th className="total-head">×</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {visibleWorks.map((work) => {
-                      let wantedCount = 0
-                      let neutralCount = 0
-                      let playedCount = 0
+      <div className="matrix-wrap">
+        <table className="matrix-table matrix-table-scrollable compact-matrix">
+          <colgroup>
+            <col className="col-work" />
+            <col className="col-total" />
+            <col className="col-total" />
+            <col className="col-total" />
+            {members.map((member) => (
+              <col key={`col-${member.id}`} className="col-member" />
+            ))}
+          </colgroup>
 
-                      members.forEach((member) => {
-                        const symbol = getWorkSymbol(member, work.id)
-                        if (symbol === '○') wantedCount += 1
-                        else if (symbol === '×') playedCount += 1
-                        else neutralCount += 1
-                      })
+          <thead>
+            <tr>
+              <th className="sticky-col sticky-head">作品</th>
+              <th className="total-head">○</th>
+              <th className="total-head">△</th>
+              <th className="total-head">×</th>
+              {members.map((member) => (
+                <th key={member.id} className="member-head-cell">
+                  {member.name}
+                </th>
+              ))}
+            </tr>
+          </thead>
 
-                      return (
-                        <tr key={work.id}>
-                          <td className="sticky-col matrix-title-cell">
-                            <button
-                              className="matrix-work-link"
-                              onClick={() => {
-                                setSelectedWorkId(work.id)
-                                setActiveTab('works')
-                              }}
-                            >
-                              {work.title}
-                            </button>
-                          </td>
+          <tbody>
+            {visibleWorks.map((work) => {
+              let wantedCount = 0
+              let neutralCount = 0
+              let playedCount = 0
 
-                          {members.map((member) => (
-                            <td
-                              key={`${work.id}-${member.id}`}
-                              className={`matrix-symbol-cell ${getWorkSymbolClass(member, work.id)}`}
-                            >
-                              {getWorkSymbol(member, work.id)}
-                            </td>
-                          ))}
+              members.forEach((member) => {
+                const symbol = getWorkSymbol(member, work.id)
+                if (symbol === '○') wantedCount += 1
+                else if (symbol === '×') playedCount += 1
+                else neutralCount += 1
+              })
 
-                          <td className="matrix-total-cell wanted-total">{wantedCount}</td>
-                          <td className="matrix-total-cell neutral-total">{neutralCount}</td>
-                          <td className="matrix-total-cell played-total">{playedCount}</td>
-                        </tr>
-                      )
-                    })}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </section>
-        )}
+              return (
+                <tr key={work.id}>
+                  <td className="sticky-col matrix-title-cell">
+                    <button
+                      className="matrix-work-link"
+                      onClick={() => {
+                        setSelectedWorkId(work.id)
+                        setActiveTab('works')
+                      }}
+                    >
+                      {work.title}
+                    </button>
+                  </td>
+
+                  <td className="matrix-total-cell wanted-total">{wantedCount}</td>
+                  <td className="matrix-total-cell neutral-total">{neutralCount}</td>
+                  <td className="matrix-total-cell played-total">{playedCount}</td>
+
+                  {members.map((member) => (
+                    <td
+                      key={`${work.id}-${member.id}`}
+                      className={`matrix-symbol-cell ${getWorkSymbolClass(member, work.id)}`}
+                    >
+                      {getWorkSymbol(member, work.id)}
+                    </td>
+                  ))}
+                </tr>
+              )
+            })}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+)}
       </main>
 
            {editorOpen && (
