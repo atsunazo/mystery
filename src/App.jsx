@@ -79,8 +79,7 @@ function getCandidateMessage(work, count) {
 }
 
 export default function App() {
-  const [eventId, setEventId] = useState(getEventIdFromUrl())
-  const [eventInput, setEventInput] = useState(getEventIdFromUrl())
+  const [eventId] = useState(getEventIdFromUrl())
   const [members, setMembers] = useState([])
   const [activeTab, setActiveTab] = useState('members')
   const [editorOpen, setEditorOpen] = useState(false)
@@ -237,12 +236,8 @@ export default function App() {
         [key]: !current[key],
       }
 
-      if (key === 'played' && next.played) {
-        next.wanted = false
-      }
-      if (key === 'wanted' && next.wanted) {
-        next.played = false
-      }
+      if (key === 'played' && next.played) next.wanted = false
+      if (key === 'wanted' && next.wanted) next.played = false
 
       return {
         ...prev,
@@ -313,50 +308,25 @@ export default function App() {
     })
   }
 
-  function moveToEvent() {
-    const nextEventId = eventInput.trim()
-    if (!nextEventId) {
-      alert('募集IDを入力してください')
-      return
-    }
-
-    const nextUrl = `${window.location.pathname}?event=${encodeURIComponent(nextEventId)}`
-    window.history.replaceState({}, '', nextUrl)
-    setEventId(nextEventId)
-    setSelectedWorkId('')
-    setActiveTab('members')
-    setEditorOpen(false)
-  }
-
-  async function copyShareUrl() {
-    const shareUrl = `${window.location.origin}${window.location.pathname}?event=${encodeURIComponent(eventId)}`
-    try {
-      await navigator.clipboard.writeText(shareUrl)
-      alert('共有URLをコピーしました')
-    } catch {
-      alert(shareUrl)
-    }
-  }
-
   return (
     <div className="app-shell">
       <header className="hero">
         <div>
           <p className="eyebrow">Group SNE Murder Mystery Planner</p>
-          <h1>作品別調整版</h1>
+          <h1>参加者・作品・調整マトリックス</h1>
           <p className="hero-copy">
-            人を追加してから、各作品ごとに「やった / やりたい / 貸出可」を登録する流れです。
+            参加者追加、作品一覧、希望状況マトリックス、作品別の日程調整を見やすくまとめた版です。
           </p>
         </div>
 
         <div className="hero-stats">
           <article className="stat-card">
-            <span>募集ID</span>
-            <strong>{eventId}</strong>
-          </article>
-          <article className="stat-card">
             <span>参加者</span>
             <strong>{members.length}</strong>
+          </article>
+          <article className="stat-card">
+            <span>作品数</span>
+            <strong>{works.length}</strong>
           </article>
           <article className="stat-card">
             <span>選択作品</span>
@@ -364,28 +334,6 @@ export default function App() {
           </article>
         </div>
       </header>
-
-      <section className="panel event-switcher">
-        <div>
-          <h2>募集を切り替える</h2>
-          <p>URLごとに別募集として分かれます。</p>
-        </div>
-
-        <div className="event-switcher-row">
-          <input
-            className="text-input"
-            value={eventInput}
-            onChange={(e) => setEventInput(e.target.value)}
-            placeholder="募集IDを入力"
-          />
-          <button className="primary-button" onClick={moveToEvent}>
-            開く
-          </button>
-          <button className="ghost-button" onClick={copyShareUrl}>
-            URLをコピー
-          </button>
-        </div>
-      </section>
 
       <nav className="tab-bar" aria-label="主要タブ">
         <button
@@ -400,6 +348,12 @@ export default function App() {
         >
           作品一覧
         </button>
+        <button
+          className={activeTab === 'matrix' ? 'tab-button active' : 'tab-button'}
+          onClick={() => setActiveTab('matrix')}
+        >
+          希望マトリックス
+        </button>
       </nav>
 
       <main className="main-content">
@@ -407,8 +361,8 @@ export default function App() {
           <section className="panel-stack">
             <div className="panel panel-header">
               <div>
-                <h2>参加者を先に登録</h2>
-                <p>追加後に、その人がやっていない作品ややりたい作品をまとめて設定します。</p>
+                <h2>参加者</h2>
+                <p>まず人を登録し、その人ごとに作品の状況を設定します。</p>
               </div>
               <button className="primary-button" onClick={openAddMember}>
                 参加者を追加
@@ -442,30 +396,18 @@ export default function App() {
                       </button>
                     </div>
                   </div>
-
-                  <div className="member-summary-row">
-                    {works.slice(0, 6).map((work) => (
-                      <span
-                        key={work.id}
-                        className={`mini-status ${getWorkSymbolClass(member, work.id)}`}
-                        title={work.title}
-                      >
-                        {work.title.slice(0, 6)} {getWorkSymbol(member, work.id)}
-                      </span>
-                    ))}
-                  </div>
                 </article>
               ))
             )}
           </section>
         )}
 
-        {activeTab === 'works' && !selectedWork && (
+        {activeTab === 'works' && (
           <section className="panel-stack">
             <div className="panel panel-header">
               <div>
                 <h2>作品一覧</h2>
-                <p>× はやった、○ はやりたい、△ はどちらでもない人です。</p>
+                <p>作品をタップすると、その作品の希望者・貸出可・日程調整が見られます。</p>
               </div>
               <input
                 className="text-input"
@@ -475,7 +417,7 @@ export default function App() {
               />
             </div>
 
-            {visibleWorks.map((work) => {
+            {!selectedWork && visibleWorks.map((work) => {
               const interested = members.filter((member) => {
                 const pref = getWorkPref(member, work.id)
                 return !pref.played && pref.wanted
@@ -504,198 +446,243 @@ export default function App() {
                     <span className="chip wanted">○ {interested}</span>
                     <span className="chip lend">貸出可 {lenders}</span>
                   </div>
-
-                  <div className="symbol-list">
-                    {members.length === 0 ? (
-                      <span className="empty-inline">参加者未登録</span>
-                    ) : (
-                      members.map((member) => (
-                        <span
-                          key={member.id}
-                          className={`symbol-badge ${getWorkSymbolClass(member, work.id)}`}
-                        >
-                          {member.name} {getWorkSymbol(member, work.id)}
-                        </span>
-                      ))
-                    )}
-                  </div>
                 </button>
               )
             })}
+
+            {selectedWork && (
+              <>
+                <div className="panel detail-header">
+                  <button className="ghost-button" onClick={() => setSelectedWorkId('')}>
+                    ← 作品一覧へ戻る
+                  </button>
+
+                  <div className="detail-title-wrap">
+                    <h2>{selectedWork.title}</h2>
+                    <p>{selectedWork.playerCountText}・{selectedWork.durationMin}分</p>
+                  </div>
+
+                  <div className="detail-status-box">
+                    <span className="detail-count">○ の人: {selectedWorkInterestedMembers.length}</span>
+                    <span className="detail-message">
+                      {getCandidateMessage(selectedWork, selectedWorkInterestedMembers.length)}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="panel two-column-grid">
+                  <section className="sub-panel">
+                    <h3>やりたい人</h3>
+                    {selectedWorkInterestedMembers.length === 0 ? (
+                      <p>まだいません。</p>
+                    ) : (
+                      <div className="list-stack">
+                        {selectedWorkInterestedMembers.map((member) => (
+                          <div className="person-row" key={member.id}>
+                            <span>{member.name}</span>
+                            <span className="person-tag wanted">○</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </section>
+
+                  <section className="sub-panel">
+                    <h3>貸し出し可能</h3>
+                    {selectedWorkLenders.length === 0 ? (
+                      <p>まだいません。</p>
+                    ) : (
+                      <div className="list-stack">
+                        {selectedWorkLenders.map((member) => (
+                          <div className="person-row" key={member.id}>
+                            <span>{member.name}</span>
+                            <span className="person-tag lend">貸出可</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </section>
+                </div>
+
+                <div className="panel panel-header">
+                  <div>
+                    <h2>この作品の日程調整</h2>
+                    <p>添付イメージのように、候補日ごとの ○ △ × 集計を表で見られるようにしています。</p>
+                  </div>
+
+                  <div className="date-add-box">
+                    <input
+                      type="datetime-local"
+                      value={newWorkDate}
+                      onChange={(e) => setNewWorkDate(e.target.value)}
+                    />
+                    <button className="primary-button" onClick={addWorkDate}>
+                      候補日を追加
+                    </button>
+                  </div>
+                </div>
+
+                {selectedWorkScheduleSummary.length === 0 ? (
+                  <div className="panel empty-state">
+                    <h3>候補日がありません</h3>
+                    <p>この作品用の候補日を追加してください。</p>
+                  </div>
+                ) : (
+                  <div className="panel">
+                    <div className="matrix-wrap">
+                      <table className="summary-table">
+                        <thead>
+                          <tr>
+                            <th>日程</th>
+                            <th>○</th>
+                            <th>△</th>
+                            <th>×</th>
+                            <th>操作</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {selectedWorkScheduleSummary.map((date) => (
+                            <tr key={date.id}>
+                              <td>{date.label}</td>
+                              <td>{date.ok}人</td>
+                              <td>{date.maybe}人</td>
+                              <td>{date.ng}人</td>
+                              <td>
+                                <button
+                                  className="table-delete"
+                                  onClick={() => removeWorkDate(date.id)}
+                                >
+                                  削除
+                                </button>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+
+                    <div className="vote-grid">
+                      {selectedWorkScheduleSummary.map((date) => (
+                        <div className="vote-block" key={date.id}>
+                          <h3>{date.label}</h3>
+                          {members.map((member) => {
+                            const vote = member.workDatePrefs?.[selectedWorkId]?.[date.id] || ''
+                            return (
+                              <div className="vote-row" key={`${date.id}-${member.id}`}>
+                                <span className="vote-name">{member.name}</span>
+                                <div className="segmented-row">
+                                  {DATE_STATUSES.map((status) => (
+                                    <button
+                                      key={status.key}
+                                      className={vote === status.key ? 'segment active' : 'segment'}
+                                      onClick={() => updateMemberDateVote(member.id, date.id, status.key)}
+                                    >
+                                      {status.label}
+                                    </button>
+                                  ))}
+                                </div>
+                              </div>
+                            )
+                          })}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </>
+            )}
           </section>
         )}
 
-        {activeTab === 'works' && selectedWork && (
+        {activeTab === 'matrix' && (
           <section className="panel-stack">
-            <div className="panel detail-header">
-              <button className="ghost-button" onClick={() => setSelectedWorkId('')}>
-                ← 作品一覧へ戻る
-              </button>
-
-              <div className="detail-title-wrap">
-                <h2>{selectedWork.title}</h2>
-                <p>{selectedWork.playerCountText}・{selectedWork.durationMin}分</p>
-              </div>
-
-              <div className="detail-status-box">
-                <span className="detail-count">○ の人: {selectedWorkInterestedMembers.length}</span>
-                <span className="detail-message">
-                  {getCandidateMessage(selectedWork, selectedWorkInterestedMembers.length)}
-                </span>
-              </div>
-            </div>
-
-            <div className="panel two-column-grid">
-              <section className="sub-panel">
-                <h3>やりたい人</h3>
-                {selectedWorkInterestedMembers.length === 0 ? (
-                  <p>まだいません。</p>
-                ) : (
-                  <div className="list-stack">
-                    {selectedWorkInterestedMembers.map((member) => (
-                      <div className="person-row" key={member.id}>
-                        <span>{member.name}</span>
-                        <span className="person-tag wanted">○</span>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </section>
-
-              <section className="sub-panel">
-                <h3>貸し出し可能</h3>
-                {selectedWorkLenders.length === 0 ? (
-                  <p>まだいません。</p>
-                ) : (
-                  <div className="list-stack">
-                    {selectedWorkLenders.map((member) => (
-                      <div className="person-row" key={member.id}>
-                        <span>{member.name}</span>
-                        <span className="person-tag lend">貸出可</span>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </section>
-            </div>
-
             <div className="panel panel-header">
               <div>
-                <h2>この作品の日程調整</h2>
-                <p>候補日ごとに、参加者ごとの ○ / △ / × を付けます。</p>
-              </div>
-
-              <div className="date-add-box">
-                <input
-                  type="datetime-local"
-                  value={newWorkDate}
-                  onChange={(e) => setNewWorkDate(e.target.value)}
-                />
-                <button className="primary-button" onClick={addWorkDate}>
-                  候補日を追加
-                </button>
+                <h2>希望マトリックス</h2>
+                <p>行が作品、列が参加者、セルが × / ○ / △ です。</p>
               </div>
             </div>
 
-            {selectedWorkScheduleSummary.length === 0 ? (
-              <div className="panel empty-state">
-                <h3>候補日がありません</h3>
-                <p>この作品用の候補日を追加してください。</p>
+            <div className="panel">
+              <div className="matrix-wrap">
+                <table className="matrix-table">
+                  <thead>
+                    <tr>
+                      <th>作品</th>
+                      {members.map((member) => (
+                        <th key={member.id}>{member.name}</th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {visibleWorks.map((work) => (
+                      <tr key={work.id}>
+                        <td className="matrix-title-cell">
+                          <button
+                            className="matrix-work-link"
+                            onClick={() => {
+                              setSelectedWorkId(work.id)
+                              setActiveTab('works')
+                            }}
+                          >
+                            {work.title}
+                          </button>
+                        </td>
+                        {members.map((member) => (
+                          <td
+                            key={`${work.id}-${member.id}`}
+                            className={`matrix-symbol-cell ${getWorkSymbolClass(member, work.id)}`}
+                          >
+                            {getWorkSymbol(member, work.id)}
+                          </td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
-            ) : (
-              selectedWorkScheduleSummary.map((date) => (
-                <article className="panel schedule-card" key={date.id}>
-                  <div className="member-head">
-                    <div>
-                      <h3>{date.label}</h3>
-                      <p>作品「{selectedWork.title}」専用の候補日です。</p>
-                    </div>
-                    <button className="ghost-button danger" onClick={() => removeWorkDate(date.id)}>
-                      削除
-                    </button>
-                  </div>
-
-                  <div className="chip-row">
-                    <span className="chip ok">○ {date.ok}</span>
-                    <span className="chip maybe">△ {date.maybe}</span>
-                    <span className="chip ng">× {date.ng}</span>
-                  </div>
-
-                  <div className="vote-grid">
-                    {members.length === 0 ? (
-                      <p>参加者がいません。</p>
-                    ) : (
-                      members.map((member) => {
-                        const vote = member.workDatePrefs?.[selectedWorkId]?.[date.id] || ''
-                        return (
-                          <div className="vote-row" key={`${date.id}-${member.id}`}>
-                            <span className="vote-name">{member.name}</span>
-                            <div className="segmented-row">
-                              {DATE_STATUSES.map((status) => (
-                                <button
-                                  key={status.key}
-                                  className={vote === status.key ? 'segment active' : 'segment'}
-                                  onClick={() => updateMemberDateVote(member.id, date.id, status.key)}
-                                >
-                                  {status.label}
-                                </button>
-                              ))}
-                            </div>
-                          </div>
-                        )
-                      })
-                    )}
-                  </div>
-                </article>
-              ))
-            )}
+            </div>
           </section>
         )}
       </main>
 
-      {editorOpen && (
+           {editorOpen && (
         <div className="sheet-backdrop" role="dialog" aria-modal="true">
-          <div className="sheet">
+          <div className="sheet mobile-editor-sheet">
             <div className="sheet-header">
               <div>
-                <h2>{draft.id ? '参加者を編集' : '参加者を追加'}</h2>
-                <p>最初に人を登録し、そのあと作品ごとの状態をまとめて設定します。</p>
+                <h2>{draft.id ? '参加者を編集する' : '参加者を追加する'}</h2>
+                <p>スマホで押しやすい大きさで、作品希望と日程希望を入力できます。</p>
               </div>
               <button className="ghost-button" onClick={() => setEditorOpen(false)}>
                 閉じる
               </button>
             </div>
 
-            <section className="editor-section">
+            <section className="editor-section compact-section">
               <label className="field-label">名前</label>
               <input
-                className="text-input"
+                className="text-input big-input"
                 value={draft.name}
                 onChange={(e) => setDraft((prev) => ({ ...prev, name: e.target.value }))}
                 placeholder="名前を入力"
               />
-
-              <label className="field-label">メモ</label>
-              <textarea
-                className="text-area"
-                value={draft.notes}
-                onChange={(e) => setDraft((prev) => ({ ...prev, notes: e.target.value }))}
-                placeholder="補足があれば入力"
-              />
             </section>
 
-            <section className="editor-section">
-              <div className="section-head-inline">
-                <h3>作品設定</h3>
-                <input
-                  className="text-input"
-                  value={workSearch}
-                  onChange={(e) => setWorkSearch(e.target.value)}
-                  placeholder="作品名で絞り込み"
-                />
+            <section className="editor-section compact-section">
+              <div className="section-title-block">
+                <h3>作品の希望状況</h3>
+                <p>やった / やりたい / どちらでもない を作品ごとに選びます。</p>
               </div>
 
-              <div className="works-editor-list">
+              <input
+                className="text-input"
+                value={workSearch}
+                onChange={(e) => setWorkSearch(e.target.value)}
+                placeholder="作品名で絞り込み"
+              />
+
+              <div className="works-editor-list mobile-work-list">
                 {visibleWorks.map((work) => {
                   const pref = draft.workPrefs?.[work.id] || {
                     played: false,
@@ -704,31 +691,58 @@ export default function App() {
                   }
 
                   return (
-                    <article className="mini-work-card" key={work.id}>
-                      <div>
-                        <h4>{work.title}</h4>
-                        <p>{work.playerCountText}・{work.durationMin}分</p>
-                      </div>
-
-                      <div className="toggle-grid">
+                    <article className="mini-work-card mobile-work-card" key={work.id}>
+                      <div className="mobile-work-head">
+                        <div>
+                          <h4>{work.title}</h4>
+                          <p>{work.playerCountText}・{work.durationMin}分</p>
+                        </div>
                         <button
-                          className={pref.played ? 'toggle-pill active played' : 'toggle-pill'}
-                          onClick={() => toggleDraftWorkPref(work.id, 'played')}
-                        >
-                          やった
-                        </button>
-                        <button
-                          className={pref.wanted ? 'toggle-pill active wanted' : 'toggle-pill'}
-                          onClick={() => toggleDraftWorkPref(work.id, 'wanted')}
-                        >
-                          やりたい
-                        </button>
-                        <button
-                          className={pref.lendable ? 'toggle-pill active lend' : 'toggle-pill'}
+                          className={pref.lendable ? 'small-lend-button active' : 'small-lend-button'}
                           onClick={() => toggleDraftWorkPref(work.id, 'lendable')}
                         >
                           貸出可
                         </button>
+                      </div>
+
+                      <div className="choice-circle-row">
+                        <button
+                          className={pref.wanted ? 'choice-circle wanted active' : 'choice-circle'}
+                          onClick={() => toggleDraftWorkPref(work.id, 'wanted')}
+                        >
+                          ○
+                        </button>
+                        <button
+                          className={!pref.played && !pref.wanted ? 'choice-circle neutral active' : 'choice-circle'}
+                          onClick={() => {
+                            setDraft((prev) => ({
+                              ...prev,
+                              workPrefs: {
+                                ...prev.workPrefs,
+                                [work.id]: {
+                                  ...(prev.workPrefs?.[work.id] || {}),
+                                  played: false,
+                                  wanted: false,
+                                  lendable: prev.workPrefs?.[work.id]?.lendable || false,
+                                },
+                              },
+                            }))
+                          }}
+                        >
+                          △
+                        </button>
+                        <button
+                          className={pref.played ? 'choice-circle played active' : 'choice-circle'}
+                          onClick={() => toggleDraftWorkPref(work.id, 'played')}
+                        >
+                          ×
+                        </button>
+                      </div>
+
+                      <div className="choice-label-row">
+                        <span>やりたい</span>
+                        <span>保留</span>
+                        <span>やった</span>
                       </div>
                     </article>
                   )
@@ -736,12 +750,67 @@ export default function App() {
               </div>
             </section>
 
-            <div className="sheet-actions">
-              <button className="ghost-button" onClick={() => setEditorOpen(false)}>
-                キャンセル
-              </button>
-              <button className="primary-button" onClick={saveMember}>
-                保存
+            {selectedWork && workDates.length > 0 && (
+              <section className="editor-section compact-section">
+                <div className="section-title-block">
+                  <h3>「{selectedWork.title}」の日程希望</h3>
+                  <p>参考画像のように、○ / △ / × をそのまま押して入力します。</p>
+                </div>
+
+                <div className="date-vote-mobile-list">
+                  {workDates.map((date) => {
+                    const currentVote = draft.workDatePrefs?.[selectedWorkId]?.[date.id] || ''
+
+                    return (
+                      <div className="date-vote-mobile-card" key={date.id}>
+                        <div className="date-vote-label">{date.label}</div>
+
+                        <div className="date-circle-buttons">
+                          {DATE_STATUSES.map((status) => (
+                            <button
+                              key={status.key}
+                              className={
+                                currentVote === status.key
+                                  ? `date-circle-button active ${status.key}`
+                                  : `date-circle-button ${status.key}`
+                              }
+                              onClick={() =>
+                                setDraft((prev) => ({
+                                  ...prev,
+                                  workDatePrefs: {
+                                    ...prev.workDatePrefs,
+                                    [selectedWorkId]: {
+                                      ...(prev.workDatePrefs?.[selectedWorkId] || {}),
+                                      [date.id]: status.key,
+                                    },
+                                  },
+                                }))
+                              }
+                            >
+                              {status.label}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+              </section>
+            )}
+
+            <section className="editor-section compact-section">
+              <label className="field-label">コメント</label>
+              <textarea
+                className="text-area big-input"
+                value={draft.notes}
+                onChange={(e) => setDraft((prev) => ({ ...prev, notes: e.target.value }))}
+                placeholder="補足があれば入力"
+              />
+            </section>
+
+            <div className="mobile-save-bar">
+              <button className="mobile-save-button" onClick={saveMember}>
+                入力する
               </button>
             </div>
           </div>
