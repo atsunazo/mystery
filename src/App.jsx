@@ -591,77 +591,82 @@ export default function App() {
           </section>
         )}
 
-        {activeTab === 'matrix' && (
+{activeTab === 'matrix' && (
   <section className="panel-stack">
     <div className="panel panel-header">
       <div>
         <h2>希望マトリックス</h2>
-        <p>作品名の右に合計、その右に各参加者の状況を表示します。</p>
+        <p>作品名と合計は固定、個別だけ横スクロールで確認できます。</p>
+oleum>
       </div>
     </div>
 
     <div className="panel matrix-panel">
       <div className="matrix-hint">
-        <span>← 横にスライドして個別状況を確認</span>
+        <span>← 右側だけ横にスライドして個別状況を確認</span>
       </div>
 
-      <div className="matrix-wrap">
-        <table className="matrix-table matrix-table-scrollable compact-matrix">
-          <colgroup>
-            <col className="col-work" />
-            <col className="col-total" />
-            <col className="col-total" />
-            <col className="col-total" />
-            {members.map((member) => (
-              <col key={`col-${member.id}`} className="col-member" />
-            ))}
-          </colgroup>
+      <div className="split-matrix">
+        <div className="matrix-fixed">
+          <table className="fixed-table">
+            <thead>
+              <tr>
+                <th className="work-head-fixed">作品</th>
+                <th className="sum-head">○</th>
+                <th className="sum-head">△</th>
+                <th className="sum-head">×</th>
+              </tr>
+            </thead>
+            <tbody>
+              {visibleWorks.map((work) => {
+                let wantedCount = 0
+                let neutralCount = 0
+                let playedCount = 0
 
-          <thead>
-            <tr>
-              <th className="sticky-col sticky-head">作品</th>
-              <th className="total-head">○</th>
-              <th className="total-head">△</th>
-              <th className="total-head">×</th>
-              {members.map((member) => (
-                <th key={member.id} className="member-head-cell">
-                  {member.name}
-                </th>
-              ))}
-            </tr>
-          </thead>
+                members.forEach((member) => {
+                  const symbol = getWorkSymbol(member, work.id)
+                  if (symbol === '○') wantedCount += 1
+                  else if (symbol === '×') playedCount += 1
+                  else neutralCount += 1
+                })
 
-          <tbody>
-            {visibleWorks.map((work) => {
-              let wantedCount = 0
-              let neutralCount = 0
-              let playedCount = 0
+                return (
+                  <tr key={`fixed-${work.id}`}>
+                    <td className="work-title-fixed">
+                      <button
+                        className="matrix-work-link"
+                        onClick={() => {
+                          setSelectedWorkId(work.id)
+                          setActiveTab('works')
+                        }}
+                      >
+                        {work.title}
+                      </button>
+                    </td>
+                    <td className="sum-cell wanted-total">{wantedCount}</td>
+                    <td className="sum-cell neutral-total">{neutralCount}</td>
+                    <td className="sum-cell played-total">{playedCount}</td>
+                  </tr>
+                )
+              })}
+            </tbody>
+          </table>
+        </div>
 
-              members.forEach((member) => {
-                const symbol = getWorkSymbol(member, work.id)
-                if (symbol === '○') wantedCount += 1
-                else if (symbol === '×') playedCount += 1
-                else neutralCount += 1
-              })
-
-              return (
-                <tr key={work.id}>
-                  <td className="sticky-col matrix-title-cell">
-                    <button
-                      className="matrix-work-link"
-                      onClick={() => {
-                        setSelectedWorkId(work.id)
-                        setActiveTab('works')
-                      }}
-                    >
-                      {work.title}
-                    </button>
-                  </td>
-
-                  <td className="matrix-total-cell wanted-total">{wantedCount}</td>
-                  <td className="matrix-total-cell neutral-total">{neutralCount}</td>
-                  <td className="matrix-total-cell played-total">{playedCount}</td>
-
+        <div className="matrix-scroll">
+          <table className="scroll-table">
+            <thead>
+              <tr>
+                {members.map((member) => (
+                  <th key={member.id} className="member-head-cell horizontal-name">
+                    {member.name}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {visibleWorks.map((work) => (
+                <tr key={`scroll-${work.id}`}>
                   {members.map((member) => (
                     <td
                       key={`${work.id}-${member.id}`}
@@ -671,10 +676,10 @@ export default function App() {
                     </td>
                   ))}
                 </tr>
-              )
-            })}
-          </tbody>
-        </table>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </section>
