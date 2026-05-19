@@ -328,10 +328,7 @@ export default function App() {
             <span>作品数</span>
             <strong>{works.length}</strong>
           </article>
-          <article className="stat-card">
-            <span>選択作品</span>
-            <strong>{selectedWork ? selectedWork.title : '未選択'}</strong>
-          </article>
+          
         </div>
       </header>
 
@@ -594,50 +591,75 @@ export default function App() {
           </section>
         )}
 
-        {activeTab === 'matrix' && (
+                {activeTab === 'matrix' && (
           <section className="panel-stack">
             <div className="panel panel-header">
               <div>
                 <h2>希望マトリックス</h2>
-                <p>行が作品、列が参加者、セルが × / ○ / △ です。</p>
+                <p>作品を左に固定し、右側の参加者列は横スライドで確認できます。</p>
               </div>
             </div>
 
-            <div className="panel">
+            <div className="panel matrix-panel">
+              <div className="matrix-hint">
+                <span>← 横にスライドして参加者ごとの状況を確認</span>
+              </div>
+
               <div className="matrix-wrap">
-                <table className="matrix-table">
+                <table className="matrix-table matrix-table-scrollable">
                   <thead>
                     <tr>
-                      <th>作品</th>
+                      <th className="sticky-col sticky-head">作品</th>
                       {members.map((member) => (
-                        <th key={member.id}>{member.name}</th>
+                        <th key={member.id} className="member-head-cell">{member.name}</th>
                       ))}
+                      <th className="total-head">○</th>
+                      <th className="total-head">△</th>
+                      <th className="total-head">×</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {visibleWorks.map((work) => (
-                      <tr key={work.id}>
-                        <td className="matrix-title-cell">
-                          <button
-                            className="matrix-work-link"
-                            onClick={() => {
-                              setSelectedWorkId(work.id)
-                              setActiveTab('works')
-                            }}
-                          >
-                            {work.title}
-                          </button>
-                        </td>
-                        {members.map((member) => (
-                          <td
-                            key={`${work.id}-${member.id}`}
-                            className={`matrix-symbol-cell ${getWorkSymbolClass(member, work.id)}`}
-                          >
-                            {getWorkSymbol(member, work.id)}
+                    {visibleWorks.map((work) => {
+                      let wantedCount = 0
+                      let neutralCount = 0
+                      let playedCount = 0
+
+                      members.forEach((member) => {
+                        const symbol = getWorkSymbol(member, work.id)
+                        if (symbol === '○') wantedCount += 1
+                        else if (symbol === '×') playedCount += 1
+                        else neutralCount += 1
+                      })
+
+                      return (
+                        <tr key={work.id}>
+                          <td className="sticky-col matrix-title-cell">
+                            <button
+                              className="matrix-work-link"
+                              onClick={() => {
+                                setSelectedWorkId(work.id)
+                                setActiveTab('works')
+                              }}
+                            >
+                              {work.title}
+                            </button>
                           </td>
-                        ))}
-                      </tr>
-                    ))}
+
+                          {members.map((member) => (
+                            <td
+                              key={`${work.id}-${member.id}`}
+                              className={`matrix-symbol-cell ${getWorkSymbolClass(member, work.id)}`}
+                            >
+                              {getWorkSymbol(member, work.id)}
+                            </td>
+                          ))}
+
+                          <td className="matrix-total-cell wanted-total">{wantedCount}</td>
+                          <td className="matrix-total-cell neutral-total">{neutralCount}</td>
+                          <td className="matrix-total-cell played-total">{playedCount}</td>
+                        </tr>
+                      )
+                    })}
                   </tbody>
                 </table>
               </div>
