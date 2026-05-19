@@ -136,6 +136,39 @@ export default function App() {
     return () => unsubscribe()
   }, [eventId, selectedWorkId])
 
+  useEffect(() => {
+    if (!editorOpen) return
+
+    const scrollY = window.scrollY
+
+    document.documentElement.style.overflow = 'hidden'
+    document.body.style.position = 'fixed'
+    document.body.style.top = `-${scrollY}px`
+    document.body.style.left = '0'
+    document.body.style.right = '0'
+    document.body.style.width = '100%'
+    document.body.style.height = '100%'
+    document.body.style.overflow = 'hidden'
+    document.body.style.touchAction = 'none'
+
+    return () => {
+      const top = document.body.style.top
+      const restoreY = top ? Math.abs(parseInt(top, 10)) : 0
+
+      document.documentElement.style.overflow = ''
+      document.body.style.position = ''
+      document.body.style.top = ''
+      document.body.style.left = ''
+      document.body.style.right = ''
+      document.body.style.width = ''
+      document.body.style.height = ''
+      document.body.style.overflow = ''
+      document.body.style.touchAction = ''
+
+      window.scrollTo(0, restoreY)
+    }
+  }, [editorOpen])
+
   const visibleWorks = useMemo(() => {
     const keyword = workSearch.trim().toLowerCase()
     if (!keyword) return works

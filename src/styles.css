@@ -17,12 +17,23 @@
 }
 
 * { box-sizing: border-box; }
-html, body, #root { margin: 0; min-height: 100%; }
+
+html, body, #root {
+  margin: 0;
+  min-height: 100%;
+}
+
+html, body {
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Noto Sans JP', sans-serif;
   background: var(--bg);
   color: var(--text);
 }
+
 button, input, textarea, select { font: inherit; }
 button { cursor: pointer; }
 
@@ -408,17 +419,22 @@ button { cursor: pointer; }
 .sheet-backdrop {
   position: fixed;
   inset: 0;
+  z-index: 9999;
   background: rgba(25, 22, 16, 0.45);
   display: flex;
   align-items: flex-end;
   justify-content: center;
   padding: 0;
+  overflow: hidden;
+  overscroll-behavior: contain;
 }
 
 .sheet {
   width: min(100%, 860px);
-  max-height: 92vh;
-  overflow: auto;
+  max-height: 92dvh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
   background: var(--bg);
   border-radius: 24px 24px 0 0;
   padding: 18px 16px 24px;
@@ -471,6 +487,12 @@ button { cursor: pointer; }
   background: #e4dffd;
   border-color: #baaef7;
   color: var(--lend);
+}
+
+@supports (-webkit-touch-callout: none) {
+  .sheet {
+    padding-bottom: max(24px, env(safe-area-inset-bottom));
+  }
 }
 
 @media (min-width: 768px) {
