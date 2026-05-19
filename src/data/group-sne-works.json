@@ -1,0 +1,278 @@
+{
+  "works": [
+    {
+      "id": "work-001",
+      "displayOrder": 1,
+      "title": "何度だって青い月に火を灯した",
+      "playerCountText": "6〜7人",
+      "playerMin": 6,
+      "playerMax": 7,
+      "durationMin": 150,
+      "brand": "グループSNE"
+    },
+    {
+      "id": "work-002",
+      "displayOrder": 2,
+      "title": "人狼村の祝祭",
+      "playerCountText": "7〜8人",
+      "playerMin": 7,
+      "playerMax": 8,
+      "durationMin": 120,
+      "brand": "グループSNE"
+    },
+    {
+      "id": "work-003",
+      "displayOrder": 3,
+      "title": "ダークユールに贖いを",
+      "playerCountText": "7〜9人",
+      "playerMin": 7,
+      "playerMax": 9,
+      "durationMin": 180,
+      "brand": "グループSNE"
+    },
+    {
+      "id": "work-004",
+      "displayOrder": 4,
+      "title": "河辺の夜の夢",
+      "playerCountText": "6〜7人",
+      "playerMin": 6,
+      "playerMax": 7,
+      "durationMin": 150,
+      "brand": "グループSNE"
+    },
+    {
+      "id": "work-005",
+      "displayOrder": 5,
+      "title": "あの夏の囚人",
+      "playerCountText": "8〜9人",
+      "playerMin": 8,
+      "playerMax": 9,
+      "durationMin": 180,
+      "brand": "グループSNE"
+    },
+    {
+      "id": "work-006",
+      "displayOrder": 6,
+      "title": "魔女は黄昏の鐘に消える",
+      "playerCountText": "6〜7人",
+      "playerMin": 6,
+      "playerMax": 7,
+      "durationMin": 150,
+      "brand": "グループSNE"
+    },
+    {
+      "id": "work-007",
+      "displayOrder": 7,
+      "title": "ホワイト・レイブン、レッド・ダイ",
+      "playerCountText": "6〜7人",
+      "playerMin": 6,
+      "playerMax": 7,
+      "durationMin": 150,
+      "brand": "グループSNE"
+    },
+    {
+      "id": "work-008",
+      "displayOrder": 8,
+      "title": "マーダーミステリー・オブ・ザ・デッド",
+      "playerCountText": "7〜8人",
+      "playerMin": 7,
+      "playerMax": 8,
+      "durationMin": 180,
+      "brand": "グループSNE"
+    },
+    {
+      "id": "work-009",
+      "displayOrder": 9,
+      "title": "奇想、アムネジア",
+      "playerCountText": "7人",
+      "playerMin": 7,
+      "playerMax": 7,
+      "durationMin": 150,
+      "brand": "グループSNE"
+    },
+    {
+      "id": "work-010",
+      "displayOrder": 10,
+      "title": "想いは満天の星に",
+      "playerCountText": "6〜7人",
+      "playerMin": 6,
+      "playerMax": 7,
+      "durationMin": 180,
+      "brand": "グループSNE"
+    },
+    {
+      "id": "work-011",
+      "displayOrder": 11,
+      "title": "最果亭の災禍",
+      "playerCountText": "6〜8人",
+      "playerMin": 6,
+      "playerMax": 8,
+      "durationMin": 180,
+      "brand": "グループSNE"
+    },
+    {
+      "id": "work-012",
+      "displayOrder": 12,
+      "title": "廃城の錬金術師",
+      "playerCountText": "6人",
+      "playerMin": 6,
+      "playerMax": 6,
+      "durationMin": 180,
+      "brand": "グループSNE"
+    },
+    {
+      "id": "work-013",
+      "displayOrder": 13,
+      "title": "罪と罰の図書館",
+      "playerCountText": "5〜6人",
+      "playerMin": 5,
+      "playerMax": 6,
+      "durationMin": 150,
+      "brand": "グループSNE"
+    },
+    {
+      "id": "work-014",
+      "displayOrder": 14,
+      "title": "優しい死神の席",
+      "playerCountText": "5〜6人",
+      "playerMin": 5,
+      "playerMax": 6,
+      "durationMin": 150,
+      "brand": "グループSNE"
+    },
+    {
+      "id": "work-015",
+      "displayOrder": 15,
+      "title": "誰がために伝書鳩は飛ぶ",
+      "playerCountText": "6〜7人",
+      "playerMin": 6,
+      "playerMax": 7,
+      "durationMin": 150,
+      "brand": "グループSNE"
+    },
+    {
+      "id": "work-016",
+      "displayOrder": 16,
+      "title": "ゲノムの塔",
+      "playerCountText": "7人",
+      "playerMin": 7,
+      "playerMax": 7,
+      "durationMin": 180,
+      "brand": "グループSNE"
+    },
+    {
+      "id": "work-017",
+      "displayOrder": 17,
+      "title": "死に浸かるワイナリー",
+      "playerCountText": "5〜6人",
+      "playerMin": 5,
+      "playerMax": 6,
+      "durationMin": 150,
+      "brand": "グループSNE"
+    },
+    {
+      "id": "work-018",
+      "displayOrder": 18,
+      "title": "マーダーミステリー：ザ・トリロジー",
+      "playerCountText": "6人",
+      "playerMin": 6,
+      "playerMax": 6,
+      "durationMin": 360,
+      "brand": "グループSNE"
+    },
+    {
+      "id": "work-019",
+      "displayOrder": 19,
+      "title": "因習村の極光",
+      "playerCountText": "6人",
+      "playerMin": 6,
+      "playerMax": 6,
+      "durationMin": 150,
+      "brand": "グループSNE"
+    },
+    {
+      "id": "work-020",
+      "displayOrder": 20,
+      "title": "マーダーミステリー・オブ・ザ・デッド0",
+      "playerCountText": "7〜8人",
+      "playerMin": 7,
+      "playerMax": 8,
+      "durationMin": 150,
+      "brand": "グループSNE"
+    },
+    {
+      "id": "work-021",
+      "displayOrder": 21,
+      "title": "アルバトロスの黄金の雨",
+      "playerCountText": "5〜6人",
+      "playerMin": 5,
+      "playerMax": 6,
+      "durationMin": 180,
+      "brand": "グループSNE"
+    },
+    {
+      "id": "work-022",
+      "displayOrder": 22,
+      "title": "＜三月うさぎ＞の鬼探し",
+      "playerCountText": "6〜7人",
+      "playerMin": 6,
+      "playerMax": 7,
+      "durationMin": 150,
+      "brand": "グループSNE"
+    },
+    {
+      "id": "work-023",
+      "displayOrder": 23,
+      "title": "澪家",
+      "playerCountText": "5〜6人",
+      "playerMin": 5,
+      "playerMax": 6,
+      "durationMin": 180,
+      "brand": "グループSNE"
+    },
+    {
+      "id": "work-024",
+      "displayOrder": 24,
+      "title": "裏切りの輪舞曲",
+      "playerCountText": "6〜7人",
+      "playerMin": 6,
+      "playerMax": 7,
+      "durationMin": 180,
+      "brand": "グループSNE"
+    },
+    {
+      "id": "work-025",
+      "displayOrder": 25,
+      "title": "ペンタグラムの境域",
+      "playerCountText": "6人",
+      "playerMin": 6,
+      "playerMax": 6,
+      "durationMin": 180,
+      "brand": "グループSNE"
+    },
+    {
+      "id": "work-026",
+      "displayOrder": 26,
+      "title": "鍾乳穴の奥の院",
+      "playerCountText": "6人",
+      "playerMin": 6,
+      "playerMax": 6,
+      "durationMin": 180,
+      "brand": "グループSNE"
+    },
+    {
+      "id": "work-027",
+      "displayOrder": 27,
+      "title": "死の館に探偵二人",
+      "playerCountText": "6人",
+      "playerMin": 6,
+      "playerMax": 6,
+      "durationMin": 150,
+      "brand": "グループSNE"
+    }
+  ],
+  "meta": {
+    "source": "group-sne.csv",
+    "count": 27
+  }
+}
