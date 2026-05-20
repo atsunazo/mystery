@@ -2020,4 +2020,88 @@ thead .col-sum-2,
 thead .col-sum-3 {
   z-index: 4;
 }
+
+.split-matrix {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.matrix-fixed {
+  flex: 0 0 auto;
+  background: #fff;
+  border-right: 1px solid #d8d8d8;
+  position: relative;
+  z-index: 2;
+}
+
+.matrix-scroll {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+.fixed-table {
+  width: max-content;
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+
+.scroll-table {
+  width: max-content;
+  min-width: max-content;
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+
+.work-head-fixed,
+.work-title-fixed {
+  min-width: 160px;
+  width: 160px;
+}
+
+.sum-head,
+.sum-cell {
+  min-width: 40px;
+  width: 40px;
+  text-align: center;
+}
+
+.member-head-cell.horizontal-name,
+.matrix-symbol-cell {
+  min-width: 44px;
+  width: 44px;
+  max-width: 44px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.fixed-table th,
+.fixed-table td,
+.scroll-table th,
+.scroll-table td {
+  height: 44px;
+}
+
+@media (max-width: 768px) {
+  .split-matrix {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+  }
+
+  .matrix-fixed {
+    flex: 0 0 auto !important;
+  }
+
+  .matrix-scroll {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    overflow-x: auto !important;
+  }
+}
 }
