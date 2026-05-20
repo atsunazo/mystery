@@ -213,3 +213,58 @@ button { cursor: pointer; }
   .sum-head, .sum-cell { width: 22px; min-width: 22px; max-width: 22px; }
   .member-head-cell.horizontal-name, .matrix-symbol-cell { width: 36px; min-width: 36px; max-width: 36px; }
 }
+/* 日程追加パネル自体が画面幅を超えないようにする */
+.schedule-add-panel,
+.date-add-box,
+.custom-date-box {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow: hidden;
+}
+
+/* 入力欄・セレクトが内容幅で広がらないようにする */
+.custom-date-box input[type="date"],
+.custom-date-box select,
+.custom-date-box button {
+  min-width: 0;
+  max-width: 100%;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* スマホでは 1行目: 日付 / 2行目: 時・分 / 3行目: 追加ボタン にする */
+@media (max-width: 719px) {
+  .custom-date-box {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 8px;
+  }
+
+  .custom-date-box input[type="date"] {
+    grid-column: 1 / -1;
+  }
+
+  .custom-date-box select {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+
+  .custom-date-box .primary-button {
+    grid-column: 1 / -1;
+    width: 100%;
+  }
+}
+
+/* かなり狭い端末では全部1列にして確実にはみ出さない */
+@media (max-width: 360px) {
+  .custom-date-box {
+    grid-template-columns: 1fr;
+  }
+
+  .custom-date-box input[type="date"],
+  .custom-date-box select,
+  .custom-date-box .primary-button {
+    grid-column: 1 / -1;
+  }
+}
