@@ -16,20 +16,19 @@ const DATE_STATUSES = [
   { key: 'maybe', label: '△' },
   { key: 'ng', label: '×' },
 ]
+const HOURS = Array.from({ length: 24 }, (_, i) => String(i).padStart(2, '0'))
+const MINUTES = ['00', '30']
 
 function getEventIdFromUrl() {
   const params = new URLSearchParams(window.location.search)
   return params.get('event')?.trim() || 'default-event'
 }
-
 function createMemberDraft() {
   return { id: '', name: '', notes: '', workPrefs: {}, workDatePrefs: {} }
 }
-
 function createWorkDraft() {
   return { id: '', title: '', playerMin: 3, playerMax: 5, durationMin: 180, memo: '' }
 }
-
 function normalizeMember(row) {
   return {
     id: row.id,
@@ -41,7 +40,6 @@ function normalizeMember(row) {
     updatedAt: row.updatedAt || null,
   }
 }
-
 function normalizeWork(row, source = 'custom') {
   const playerMin = Number(row.playerMin ?? row.minPlayers ?? 0) || 0
   const playerMax = Number(row.playerMax ?? row.maxPlayers ?? playerMin) || playerMin
@@ -60,31 +58,26 @@ function normalizeWork(row, source = 'custom') {
     updatedAt: row.updatedAt || null,
   }
 }
-
 function getWorkPref(member, workId) {
   return member.workPrefs?.[workId] || { played: false, wanted: false, lendable: false }
 }
-
 function getWorkSymbol(member, workId) {
   const pref = getWorkPref(member, workId)
   if (pref.played) return '×'
   if (pref.wanted) return '○'
   return '△'
 }
-
 function getWorkSymbolClass(member, workId) {
   const pref = getWorkPref(member, workId)
   if (pref.played) return 'played'
   if (pref.wanted) return 'wanted'
   return 'neutral'
 }
-
 function getCandidateMessage(work, count) {
   if (count < work.playerMin) return `あと${work.playerMin - count}人で開催可`
   if (work.playerMax && count > work.playerMax) return `${count - work.playerMax}人多い`
   return '開催条件OK'
 }
-
 function formatDateLabel(value) {
   return value ? value.replace('T', ' ') : ''
 }
@@ -102,6 +95,9 @@ export default function App() {
   const [selectedWorkId, setSelectedWorkId] = useState('')
   const [workDates, setWorkDates] = useState([])
   const [newWorkDate, setNewWorkDate] = useState('')
+  const [newWorkHour, setNewWorkHour] = useState('19')
+  const [newWorkMinute, setNewWorkMinute] = useState('00')
+  const [workDateCounts, setWorkDateCounts] = useState({})
   const [editorDatesMap, setEditorDatesMap] = useState({})
   const [loadingMembers, setLoadingMembers] = useState(true)
   const [workEditorOpen, setWorkEditorOpen] = useState(false)
@@ -158,6 +154,20 @@ export default function App() {
     return () => unsubscribe()
   }, [eventId, selectedWorkId])
 
+  useEffect(() => {
+    if (works.length === 0) {
+      setWorkDateCounts({})
+      return
+    }
+    const unsubscribes = works.map((work) => {
+      const datesRef = collection(db, 'events', eventId, 'workSchedules', work.id, 'dates')
+      return onSnapshot(datesRef, (snapshot) => {
+        setWorkDateCounts((prev) => ({ ...prev, [work.id]: snapshot.size }))
+      })
+    })
+    return () => unsubscribes.forEach((unsubscribe) => unsubscribe())
+  }, [eventId, works])
+
   const draftWantedWorkIds = useMemo(() => {
     return works
       .filter((work) => {
@@ -166,7 +176,6 @@ export default function App() {
       })
       .map((work) => work.id)
   }, [works, draft.workPrefs])
-
   const draftWantedWorkKey = draftWantedWorkIds.join('|')
 
   useEffect(() => {
@@ -245,9 +254,9 @@ export default function App() {
   const activeRecruitments = useMemo(() => {
     return works
       .map((work) => ({ work, stats: workStats.get(work.id) || { wanted: 0, neutral: 0, played: 0, lendable: 0 } }))
-      .filter(({ stats }) => stats.wanted > 0 || stats.lendable > 0)
+      .filter(({ work }) => (workDateCounts[work.id] || 0) > 0)
       .sort((a, b) => b.stats.wanted - a.stats.wanted || a.work.title.localeCompare(b.work.title, 'ja'))
-  }, [works, workStats])
+  }, [works, workStats, workDateCounts])
 
   const selectedWantedMembers = useMemo(() => {
     if (!selectedWorkId) return []
@@ -277,9 +286,7 @@ export default function App() {
     })
   }, [selectedWantedMembers, selectedWorkId, workDates])
 
-  const draftWantedWorks = useMemo(() => {
-    return works.filter((work) => draftWantedWorkIds.includes(work.id))
-  }, [works, draftWantedWorkIds])
+  const draftWantedWorks = useMemo(() => works.filter((work) => draftWantedWorkIds.includes(work.id)), [works, draftWantedWorkIds])
 
   function openAddMember() {
     setDraft(createMemberDraft())
@@ -287,19 +294,16 @@ export default function App() {
     setMobileSection('summary')
     setEditorOpen(true)
   }
-
   function openEditMember(member, section = 'summary') {
     setDraft(JSON.parse(JSON.stringify(member)))
     setMemberWorkSearch('')
     setMobileSection(section)
     setEditorOpen(true)
   }
-
   function openAddWork() {
     setWorkDraft(createWorkDraft())
     setWorkEditorOpen(true)
   }
-
   function openEditWork(work) {
     setWorkDraft({
       id: work.source === 'custom' ? work.id : '',
@@ -311,7 +315,6 @@ export default function App() {
     })
     setWorkEditorOpen(true)
   }
-
   function toggleDraftWorkPref(workId, key) {
     setDraft((prev) => {
       const current = prev.workPrefs?.[workId] || { played: false, wanted: false, lendable: false }
@@ -378,9 +381,10 @@ export default function App() {
 
   async function addWorkDate() {
     if (!selectedWorkId || !newWorkDate) return
+    const rawValue = `${newWorkDate}T${newWorkHour}:${newWorkMinute}`
     await addDoc(collection(db, 'events', eventId, 'workSchedules', selectedWorkId, 'dates'), {
-      label: formatDateLabel(newWorkDate),
-      rawValue: newWorkDate,
+      label: formatDateLabel(rawValue),
+      rawValue,
       createdAt: serverTimestamp(),
     })
     setNewWorkDate('')
@@ -418,7 +422,7 @@ export default function App() {
         <div>
           <p className="eyebrow">Murder Mystery Planner</p>
           <h1>募集・日程調整ホーム</h1>
-          <p className="hero-copy">人を追加して、その人の○作品だけ日程調整に進む形にしました。</p>
+          <p className="hero-copy">候補日がある作品だけを募集として表示し、人ごとに○作品の日程を編集します。</p>
         </div>
         <div className="hero-actions">
           <button className="primary-button" onClick={openAddMember}>人を追加</button>
@@ -440,27 +444,26 @@ export default function App() {
               <div className="panel-title-row">
                 <div>
                   <h2>今募集しているもの</h2>
-                  <p>○の人数を中心に、調整が必要な作品をコンパクトに表示します。</p>
+                  <p>調整用の候補日時が入っている作品だけ表示します。</p>
                 </div>
               </div>
               {activeRecruitments.length === 0 ? (
-                <div className="empty-mini">まだ募集はありません。参加者を追加し、作品に○を付けるとここに出ます。</div>
+                <div className="empty-mini">まだ募集はありません。作品に候補日を追加するとここに出ます。</div>
               ) : (
                 <div className="compact-work-list">
                   {activeRecruitments.map(({ work, stats }) => (
                     <article className="compact-work-card" key={work.id}>
                       <button className="compact-work-main" onClick={() => { setSelectedWorkId(work.id); setActiveTab('works') }}>
                         <strong>{work.title}</strong>
-                        <span>{work.playerCountText}・{work.durationMin}分</span>
+                        <span>{work.playerCountText}・{work.durationMin}分・候補日{workDateCounts[work.id] || 0}件</span>
                       </button>
-                      <div className="compact-right">
+                      <div className="compact-right centered-stats">
                         <div className="mini-stats one-line">
                           <span className="mini-stat wanted">○{stats.wanted}</span>
                           <span className="mini-stat neutral">△{stats.neutral}</span>
                           <span className="mini-stat played">×{stats.played}</span>
                           <span className="mini-stat lend">貸{stats.lendable}</span>
                         </div>
-                        <button className="icon-edit" onClick={() => { setSelectedWorkId(work.id); setActiveTab('works') }}>開く</button>
                       </div>
                     </article>
                   ))}
@@ -513,13 +516,12 @@ export default function App() {
               <div className="member-list-grid">
                 {members.map((member) => (
                   <article className="panel member-card compact-member" key={member.id}>
-                    <button className="corner-edit" onClick={() => openEditMember(member, 'summary')}>編集</button>
                     <button className="member-card-main" onClick={() => openEditMember(member, 'works')}>
                       <h3>{member.name}</h3>
                       <p>{member.notes || 'メモなし'}</p>
                     </button>
-                    <div className="member-actions compact-actions">
-                      <button className="small-button" onClick={() => openEditMember(member, 'dates')}>日程</button>
+                    <div className="member-actions compact-actions action-left">
+                      <button className="small-button" onClick={() => openEditMember(member, 'summary')}>編集</button>
                       <button className="small-button danger" onClick={() => removeMember(member.id)}>削除</button>
                     </div>
                   </article>
@@ -547,7 +549,7 @@ export default function App() {
                     <article className="compact-work-card" key={work.id}>
                       <button className="compact-work-main" onClick={() => setSelectedWorkId(work.id)}>
                         <strong>{work.title}</strong>
-                        <span>{work.playerCountText}・{work.durationMin}分</span>
+                        <span>{work.playerCountText}・{work.durationMin}分・候補日{workDateCounts[work.id] || 0}件</span>
                       </button>
                       <div className="compact-right">
                         <div className="mini-stats one-line">
@@ -608,10 +610,16 @@ export default function App() {
                   </section>
                 </div>
 
-                <div className="panel panel-header">
-                  <div><h2>この作品の日程調整</h2><p>候補日は○の人だけに表示・集計されます。</p></div>
-                  <div className="date-add-box">
-                    <input type="datetime-local" value={newWorkDate} onChange={(e) => setNewWorkDate(e.target.value)} />
+                <div className="panel panel-header schedule-add-panel">
+                  <div><h2>この作品の日程調整</h2><p>日付、時間、分を選んで候補日を追加します。時間は1時間刻み、分は30分刻みです。</p></div>
+                  <div className="date-add-box custom-date-box">
+                    <input type="date" value={newWorkDate} onChange={(e) => setNewWorkDate(e.target.value)} />
+                    <select value={newWorkHour} onChange={(e) => setNewWorkHour(e.target.value)} aria-label="時">
+                      {HOURS.map((hour) => <option key={hour} value={hour}>{hour}時</option>)}
+                    </select>
+                    <select value={newWorkMinute} onChange={(e) => setNewWorkMinute(e.target.value)} aria-label="分">
+                      {MINUTES.map((minute) => <option key={minute} value={minute}>{minute}分</option>)}
+                    </select>
                     <button className="primary-button" onClick={addWorkDate}>候補日を追加</button>
                   </div>
                 </div>
@@ -662,38 +670,37 @@ export default function App() {
 
         {activeTab === 'matrix' && (
           <section className="panel-stack">
-            <div className="panel panel-header">
-              <div><h2>希望マトリックス</h2><p>作品・合計は左固定、参加者部分だけ横にスライドします。</p></div>
-              <input className="text-input" value={workSearch} onChange={(e) => setWorkSearch(e.target.value)} placeholder="作品名で絞り込み" />
-            </div>
+            <div className="panel panel-header"><div><h2>希望マトリックス</h2><p>作品タイトル列だけ固定し、右側と上下を表の中でスクロールできます。</p></div></div>
             <div className="panel matrix-panel">
-              <div className="matrix-hint">右側の参加者欄だけ横スクロールできます。</div>
+              <div className="matrix-hint">タイトル列は固定、右側は横スクロール、表全体は上下スクロールできます。</div>
               <div className="split-matrix">
                 <div className="matrix-fixed">
                   <table className="fixed-table">
-                    <thead><tr><th className="work-head-fixed">作品</th><th className="sum-head">○</th><th className="sum-head">△</th><th className="sum-head">×</th></tr></thead>
+                    <thead><tr><th className="work-head-fixed">作品</th></tr></thead>
                     <tbody>
-                      {visibleWorks.map((work) => {
-                        const stats = workStats.get(work.id) || { wanted: 0, neutral: 0, played: 0 }
-                        return (
-                          <tr key={`fixed-${work.id}`}>
-                            <td className="work-title-fixed"><button className="matrix-work-link" onClick={() => { setSelectedWorkId(work.id); setActiveTab('works') }}>{work.title}</button></td>
-                            <td className="sum-cell wanted-total">{stats.wanted}</td>
-                            <td className="sum-cell neutral-total">{stats.neutral}</td>
-                            <td className="sum-cell played-total">{stats.played}</td>
-                          </tr>
-                        )
-                      })}
+                      {visibleWorks.map((work) => (
+                        <tr key={`fixed-${work.id}`}>
+                          <td className="work-title-fixed"><button className="matrix-work-link" onClick={() => { setSelectedWorkId(work.id); setActiveTab('works') }}>{work.title}</button></td>
+                        </tr>
+                      ))}
                     </tbody>
                   </table>
                 </div>
                 <div className="matrix-scroll">
                   <table className="scroll-table">
-                    <thead><tr>{members.map((member) => <th key={member.id} className="member-head-cell horizontal-name">{member.name}</th>)}</tr></thead>
+                    <thead><tr><th className="sum-head">○</th><th className="sum-head">△</th><th className="sum-head">×</th>{members.map((member) => <th key={member.id} className="member-head-cell horizontal-name">{member.name}</th>)}</tr></thead>
                     <tbody>
-                      {visibleWorks.map((work) => (
-                        <tr key={`scroll-${work.id}`}>{members.map((member) => <td key={`${work.id}-${member.id}`} className={`matrix-symbol-cell ${getWorkSymbolClass(member, work.id)}`}>{getWorkSymbol(member, work.id)}</td>)}</tr>
-                      ))}
+                      {visibleWorks.map((work) => {
+                        const stats = workStats.get(work.id) || { wanted: 0, neutral: 0, played: 0 }
+                        return (
+                          <tr key={`scroll-${work.id}`}>
+                            <td className="sum-cell wanted-total">{stats.wanted}</td>
+                            <td className="sum-cell neutral-total">{stats.neutral}</td>
+                            <td className="sum-cell played-total">{stats.played}</td>
+                            {members.map((member) => <td key={`${work.id}-${member.id}`} className={`matrix-symbol-cell ${getWorkSymbolClass(member, work.id)}`}>{getWorkSymbol(member, work.id)}</td>)}
+                          </tr>
+                        )
+                      })}
                     </tbody>
                   </table>
                 </div>
@@ -793,9 +800,7 @@ export default function App() {
               </section>
             )}
 
-            <div className="sheet-bottom-actions sticky-save-row">
-              <button className="primary-button wide" onClick={saveMember}>保存</button>
-            </div>
+            <div className="sheet-bottom-actions sticky-save-row"><button className="primary-button wide" onClick={saveMember}>保存</button></div>
           </div>
         </div>
       )}
