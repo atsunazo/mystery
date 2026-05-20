@@ -597,7 +597,6 @@ export default function App() {
       <div>
         <h2>希望マトリックス</h2>
         <p>作品名と合計は固定、個別だけ横スクロールで確認できます。</p>
-oleum>
       </div>
     </div>
 

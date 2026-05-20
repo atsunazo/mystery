@@ -1896,17 +1896,6 @@ button { cursor: pointer; }
   color: var(--muted);
 }
 
-@mediaгар (max-width: 640px) {
-  .matrix-work-link {
-    font-size: 11px;
-  }
-
-  .sum-head,
-  .sum-cell {
-    width: 22px;
-    min-width: 22px;
-    max-width: 22px;
-  }
 
   .member-head-cell.horizontal-name {
     width: 38px;
@@ -1921,5 +1910,114 @@ button { cursor: pointer; }
     max-width: 38px;
     font-size: 12px;
   }
+
+  .split-matrix {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  width: 100%;
+}
+
+.matrix-fixed {
+  flex-shrink: 0;
+  background: #fff;
+  border-right: 1px solid #d8d8d8;
+  position: relative;
+  z-index: 2;
+}
+
+.matrix-scroll {
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+.fixed-table {
+  width: auto;
+  table-layout: fixed;
+}
+
+.scroll-table {
+  width: max-content;   /* これが重要 */
+  table-layout: fixed;
+}
+
+.member-head-cell.horizontal-name,
+.matrix-symbol-cell {
+  width: 44px;
+  min-width: 44px;
+  max-width: 44px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.fixed-table th,
+.fixed-table td,
+.scroll-table th,
+.scroll-table td {
+  height: 44px; /* 2テーブルの行高を揃える */
+}
+
+.matrix-table-wrap {
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+.matrix-table {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: max-content;
+  min-width: 100%;
+  table-layout: fixed;
+}
+
+.matrix-table th,
+.matrix-table td {
+  height: 44px;
+  background: #fff;
+}
+
+.col-work {
+  position: sticky;
+  left: 0;
+  z-index: 3;
+  min-width: 220px;
+  background: #fff;
+}
+
+.col-sum-1 {
+  position: sticky;
+  left: 220px;
+  z-index: 3;
+  width: 48px;
+  min-width: 48px;
+  background: #fff;
+}
+
+.col-sum-2 {
+  position: sticky;
+  left: 268px;
+  z-index: 3;
+  width: 48px;
+  min-width: 48px;
+  background: #fff;
+}
+
+.col-sum-3 {
+  position: sticky;
+  left: 316px;
+  z-index: 3;
+  width: 48px;
+  min-width: 48px;
+  background: #fff;
+}
+
+thead .col-work,
+thead .col-sum-1,
+thead .col-sum-2,
+thead .col-sum-3 {
+  z-index: 4;
 }
 }
