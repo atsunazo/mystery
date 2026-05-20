@@ -233,41 +233,6 @@ button { cursor: pointer; }
   box-sizing: border-box;
 }
 
-/* スマホでは 1行目: 日付 / 2行目: 時・分 / 3行目: 追加ボタン にする */
-@media (max-width: 719px) {
-  .custom-date-box {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    gap: 8px;
-  }
-
-  .custom-date-box input[type="date"] {
-    grid-column: 1 / -1;
-  }
-
-  .custom-date-box select {
-    padding-left: 8px;
-    padding-right: 8px;
-  }
-
-  .custom-date-box .primary-button {
-    grid-column: 1 / -1;
-    width: 100%;
-  }
-}
-
-/* かなり狭い端末では全部1列にして確実にはみ出さない */
-@media (max-width: 360px) {
-  .custom-date-box {
-    grid-template-columns: 1fr;
-  }
-
-  .custom-date-box input[type="date"],
-  .custom-date-box select,
-  .custom-date-box .primary-button {
-    grid-column: 1 / -1;
-  }
-}
 /* 日程追加パネル自体が横にはみ出さないようにする */
 .schedule-add-panel,
 .date-add-box,
