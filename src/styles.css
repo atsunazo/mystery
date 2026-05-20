@@ -310,3 +310,74 @@ button { cursor: pointer; }
     padding-right: 1px;
   }
 }
+/* 表全体はここで上下スクロールさせる */
+.split-matrix {
+  position: relative;
+  max-height: 68dvh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  align-items: start;
+}
+
+/* 左の作品列は横方向固定、右側だけ横スクロール */
+.matrix-fixed {
+  position: sticky;
+  left: 0;
+  z-index: 10;
+  align-self: start;
+}
+
+.matrix-scroll {
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: visible;
+  -webkit-overflow-scrolling: touch;
+  align-self: start;
+}
+
+/* sticky が効きやすいように collapse をやめる */
+.fixed-table,
+.scroll-table {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+/* ヘッダー行そのものを固定 */
+.fixed-table thead,
+.scroll-table thead {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+}
+
+/* th も念のため固定。作品・○△×・名前すべてが対象 */
+.fixed-table thead th,
+.scroll-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 31;
+  background: #f1ede6;
+}
+
+/* 左上の「作品」は、左固定列かつ上固定なので一番前に出す */
+.fixed-table thead th.work-head-fixed {
+  z-index: 40;
+  background: #ece6dc;
+}
+
+/* 右側ヘッダー（○△×・名前）がスクロール中に下のセルに隠れないようにする */
+.scroll-table thead th {
+  box-shadow: 0 1px 0 var(--line);
+}
+
+/* 左固定列の本文はヘッダーより下にする */
+.matrix-fixed tbody td {
+  position: relative;
+  z-index: 11;
+}
+
+/* 本文セルはヘッダーより下 */
+.scroll-table tbody td {
+  position: relative;
+  z-index: 1;
+}
