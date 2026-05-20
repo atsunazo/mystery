@@ -268,3 +268,80 @@ button { cursor: pointer; }
     grid-column: 1 / -1;
   }
 }
+/* 日程追加パネル自体が横にはみ出さないようにする */
+.schedule-add-panel,
+.date-add-box,
+.custom-date-box {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow: hidden;
+}
+
+/* 横並び維持：日付を広め、時・分を細く、ボタンも最小幅 */
+.custom-date-box {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 58px 58px auto;
+  gap: 4px;
+  align-items: center;
+}
+
+.custom-date-box input[type="date"],
+.custom-date-box select,
+.custom-date-box .primary-button {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* date/select は標準UIの余白が広いので詰める */
+.custom-date-box input[type="date"] {
+  padding: 8px 6px;
+  font-size: 13px;
+}
+
+.custom-date-box select {
+  padding: 8px 2px;
+  font-size: 13px;
+  text-align: center;
+  text-align-last: center;
+}
+
+.custom-date-box .primary-button {
+  min-height: 38px;
+  padding: 8px 8px;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+/* 狭いスマホでは、日付・時・分は横並び維持、ボタンだけ下へ */
+@media (max-width: 390px) {
+  .custom-date-box {
+    grid-template-columns: minmax(0, 1fr) 54px 54px;
+  }
+
+  .custom-date-box .primary-button {
+    grid-column: 1 / -1;
+  }
+}
+
+/* さらに狭い端末では時・分をもう少し詰める */
+@media (max-width: 340px) {
+  .custom-date-box {
+    grid-template-columns: minmax(0, 1fr) 50px 50px;
+    gap: 3px;
+  }
+
+  .custom-date-box input[type="date"] {
+    font-size: 12px;
+    padding-left: 4px;
+    padding-right: 4px;
+  }
+
+  .custom-date-box select {
+    font-size: 12px;
+    padding-left: 1px;
+    padding-right: 1px;
+  }
+}
