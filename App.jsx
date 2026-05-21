@@ -231,6 +231,7 @@ export default function App() {
   }, [works, memberWorkSearch])
 
   const matrixWorks = works
+  const matrixGridTemplate = `clamp(112px, 38vw, 180px) 24px 24px 24px repeat(${members.length}, 36px)`
 
   const selectedWork = useMemo(() => works.find((work) => work.id === selectedWorkId) || null, [works, selectedWorkId])
 
@@ -672,35 +673,27 @@ export default function App() {
 
         {activeTab === 'matrix' && (
           <section className="panel-stack">
-            <div className="panel panel-header"><div><h2>希望マトリックス</h2><p>一番上の見出し行と左の作品列を固定し、表の中だけで上下左右にスクロールできます。</p></div></div>
+            <div className="panel panel-header"><div><h2>希望マトリックス</h2><p>上の見出し行と左の作品列を固定し、表の中だけで上下左右にスクロールできます。</p></div></div>
             <div className="panel matrix-panel">
-              <div className="matrix-hint">上のカラム見出しと左の作品名は固定です。右側は横に、表全体は上下にスクロールできます。</div>
-              <div className="matrix-table-wrap" role="region" aria-label="希望マトリックス">
-                <table className="matrix-table">
-                  <thead>
-                    <tr>
-                      <th className="matrix-sticky-corner">作品</th>
-                      <th className="matrix-sum-head">○</th>
-                      <th className="matrix-sum-head">△</th>
-                      <th className="matrix-sum-head">×</th>
-                      {members.map((member) => <th key={member.id} className="matrix-member-head">{member.name}</th>)}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {matrixWorks.map((work) => {
-                      const stats = workStats.get(work.id) || { wanted: 0, neutral: 0, played: 0 }
-                      return (
-                        <tr key={`matrix-${work.id}`}>
-                          <th className="matrix-work-cell" scope="row"><button className="matrix-work-link" onClick={() => { setSelectedWorkId(work.id); setActiveTab('works') }}>{work.title}</button></th>
-                          <td className="matrix-sum-cell wanted-total">{stats.wanted}</td>
-                          <td className="matrix-sum-cell neutral-total">{stats.neutral}</td>
-                          <td className="matrix-sum-cell played-total">{stats.played}</td>
-                          {members.map((member) => <td key={`${work.id}-${member.id}`} className={`matrix-symbol-cell ${getWorkSymbolClass(member, work.id)}`}>{getWorkSymbol(member, work.id)}</td>)}
-                        </tr>
-                      )
-                    })}
-                  </tbody>
-                </table>
+              <div className="matrix-hint">人の名前・○△×の見出しは上に固定、作品名は左に固定されます。</div>
+              <div className="matrix-grid-wrap" role="region" aria-label="希望マトリックス">
+                <div className="matrix-grid" style={{ gridTemplateColumns: matrixGridTemplate }}>
+                  <div className="matrix-grid-cell matrix-head matrix-corner">作品</div>
+                  <div className="matrix-grid-cell matrix-head matrix-sum-head">○</div>
+                  <div className="matrix-grid-cell matrix-head matrix-sum-head">△</div>
+                  <div className="matrix-grid-cell matrix-head matrix-sum-head">×</div>
+                  {members.map((member) => <div key={`head-${member.id}`} className="matrix-grid-cell matrix-head matrix-member-head">{member.name}</div>)}
+                  {matrixWorks.flatMap((work) => {
+                    const stats = workStats.get(work.id) || { wanted: 0, neutral: 0, played: 0 }
+                    return [
+                      <button key={`work-${work.id}`} className="matrix-grid-cell matrix-work-cell matrix-work-link" onClick={() => { setSelectedWorkId(work.id); setActiveTab('works') }}>{work.title}</button>,
+                      <div key={`wanted-${work.id}`} className="matrix-grid-cell matrix-sum-cell wanted-total">{stats.wanted}</div>,
+                      <div key={`neutral-${work.id}`} className="matrix-grid-cell matrix-sum-cell neutral-total">{stats.neutral}</div>,
+                      <div key={`played-${work.id}`} className="matrix-grid-cell matrix-sum-cell played-total">{stats.played}</div>,
+                      ...members.map((member) => <div key={`${work.id}-${member.id}`} className={`matrix-grid-cell matrix-symbol-cell ${getWorkSymbolClass(member, work.id)}`}>{getWorkSymbol(member, work.id)}</div>)
+                    ]
+                  })}
+                </div>
               </div>
             </div>
           </section>
