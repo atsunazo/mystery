@@ -424,7 +424,7 @@ export default function App() {
         <div>
           <p className="eyebrow">Murder Mystery Planner</p>
           <h1>募集・日程調整ホーム</h1>
-          <p className="hero-copy">スマホで見やすく、候補日がある作品だけをホームに表示します。人を押すと希望作品と日程を編集できます。</p>
+          <p className="hero-copy">候補日がある作品だけを募集として表示し、人ごとに○作品の日程を編集します。</p>
         </div>
         <div className="hero-actions">
           <button className="primary-button" onClick={openAddMember}>人を追加</button>
@@ -523,8 +523,8 @@ export default function App() {
                       <p>{member.notes || 'メモなし'}</p>
                     </button>
                     <div className="member-actions compact-actions action-left">
+                      <button className="small-button" onClick={() => openEditMember(member, 'summary')}>編集</button>
                       <button className="small-button danger" onClick={() => removeMember(member.id)}>削除</button>
-                <button className="small-button" onClick={() => openEditMember(member, \'summary\')}>編集</button>
                     </div>
                   </article>
                 ))}
@@ -561,7 +561,7 @@ export default function App() {
                           <span className="mini-stat lend">貸{stats.lendable}</span>
                         </div>
                         <div className="right-actions">
-                          <button className="icon-edit" onClick={() => openEditWork(work)}>{work.source === 'custom' ? '編集' : '複製'}</button>
+                          <button className="icon-edit" onClick={() => openEditWork(work)}>編集</button>
                           {work.source === 'custom' && <button className="icon-edit danger" onClick={() => removeWork(work)}>削除</button>}
                         </div>
                       </div>
@@ -672,45 +672,40 @@ export default function App() {
 
         {activeTab === 'matrix' && (
           <section className="panel-stack">
-            <div className="panel panel-header"><div><h2>希望マトリックス</h2><p>作品タイトル列を固定し、右側は横スクロール、表全体は上下スクロールできます。</p></div></div>
+            <div className="panel panel-header"><div><h2>希望マトリックス</h2><p>一番上の見出し行と左の作品列を固定し、表の中だけで上下左右にスクロールできます。</p></div></div>
             <div className="panel matrix-panel">
-              <div className="matrix-hint">タイトル列は固定、右側は横スクロール、表全体は上下スクロールできます。</div>
-              <div className="split-matrix">
-                <div className="matrix-fixed">
-                  <table className="fixed-table">
-                    <thead><tr><th className="work-head-fixed">作品</th></tr></thead>
-                    <tbody>
-                      {matrixWorks.map((work) => (
-                        <tr key={`fixed-${work.id}`}>
-                          <td className="work-title-fixed"><button className="matrix-work-link" onClick={() => { setSelectedWorkId(work.id); setActiveTab('works') }}>{work.title}</button></td>
+              <div className="matrix-hint">上のカラム見出しと左の作品名は固定です。右側は横に、表全体は上下にスクロールできます。</div>
+              <div className="matrix-table-wrap" role="region" aria-label="希望マトリックス">
+                <table className="matrix-table">
+                  <thead>
+                    <tr>
+                      <th className="matrix-sticky-corner">作品</th>
+                      <th className="matrix-sum-head">○</th>
+                      <th className="matrix-sum-head">△</th>
+                      <th className="matrix-sum-head">×</th>
+                      {members.map((member) => <th key={member.id} className="matrix-member-head">{member.name}</th>)}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {matrixWorks.map((work) => {
+                      const stats = workStats.get(work.id) || { wanted: 0, neutral: 0, played: 0 }
+                      return (
+                        <tr key={`matrix-${work.id}`}>
+                          <th className="matrix-work-cell" scope="row"><button className="matrix-work-link" onClick={() => { setSelectedWorkId(work.id); setActiveTab('works') }}>{work.title}</button></th>
+                          <td className="matrix-sum-cell wanted-total">{stats.wanted}</td>
+                          <td className="matrix-sum-cell neutral-total">{stats.neutral}</td>
+                          <td className="matrix-sum-cell played-total">{stats.played}</td>
+                          {members.map((member) => <td key={`${work.id}-${member.id}`} className={`matrix-symbol-cell ${getWorkSymbolClass(member, work.id)}`}>{getWorkSymbol(member, work.id)}</td>)}
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-                <div className="matrix-scroll">
-                  <table className="scroll-table">
-                    <thead><tr><th className="sum-head">○</th><th className="sum-head">△</th><th className="sum-head">×</th>{members.map((member) => <th key={member.id} className="member-head-cell horizontal-name">{member.name}</th>)}</tr></thead>
-                    <tbody>
-                      {matrixWorks.map((work) => {
-                        const stats = workStats.get(work.id) || { wanted: 0, neutral: 0, played: 0 }
-                        return (
-                          <tr key={`scroll-${work.id}`}>
-                            <td className="sum-cell wanted-total">{stats.wanted}</td>
-                            <td className="sum-cell neutral-total">{stats.neutral}</td>
-                            <td className="sum-cell played-total">{stats.played}</td>
-                            {members.map((member) => <td key={`${work.id}-${member.id}`} className={`matrix-symbol-cell ${getWorkSymbolClass(member, work.id)}`}>{getWorkSymbol(member, work.id)}</td>)}
-                          </tr>
-                        )
-                      })}
-                    </tbody>
-                  </table>
-                </div>
+                      )
+                    })}
+                  </tbody>
+                </table>
               </div>
             </div>
           </section>
         )}
-      </main>
+     </main>
 
       {editorOpen && (
         <div className="sheet-backdrop" role="dialog" aria-modal="true">
