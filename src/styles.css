@@ -402,3 +402,126 @@ button { cursor: pointer; }
   position: relative;
   z-index: 1;
 }
+
+.matrix-panel {
+  padding: 8px;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.matrix-scroll-shell {
+  width: 100%;
+  max-height: 68dvh;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #fff;
+}
+
+.matrix-table {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: max-content;
+  min-width: 100%;
+}
+
+.matrix-table th,
+.matrix-table td {
+  height: 40px;
+  padding: 4px;
+  text-align: center;
+  white-space: nowrap;
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  background: #fff;
+}
+
+.matrix-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: #f1ede6;
+  font-weight: 900;
+}
+
+.corner-cell,
+.work-title-cell {
+  width: clamp(132px, 42vw, 240px);
+  min-width: clamp(132px, 42vw, 240px);
+  max-width: clamp(132px, 42vw, 240px);
+  text-align: left !important;
+  padding: 4px 7px !important;
+  box-shadow: 1px 0 0 var(--line);
+}
+
+.corner-cell {
+  position: sticky;
+  top: 0;
+  left: 0;
+  z-index: 40;
+  background: #ece6dc !important;
+}
+
+.work-title-cell {
+  position: sticky;
+  left: 0;
+  z-index: 15;
+  background: #fffdfa !important;
+}
+
+.sum-head,
+.sum-cell {
+  width: 26px;
+  min-width: 26px;
+  max-width: 26px;
+  padding: 4px 1px !important;
+  font-size: 10px;
+}
+
+.member-head-cell.horizontal-name,
+.matrix-symbol-cell {
+  width: 38px;
+  min-width: 38px;
+  max-width: 38px;
+}
+
+.member-head-cell.horizontal-name {
+  font-size: 9px;
+  line-height: 1.1;
+  padding: 4px 2px !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (max-width: 420px) {
+  .corner-cell,
+  .work-title-cell {
+    width: 128px;
+    min-width: 128px;
+    max-width: 128px;
+  }
+}
+
+@media (max-width: 380px) {
+  .corner-cell,
+  .work-title-cell {
+    width: 118px;
+    min-width: 118px;
+    max-width: 118px;
+  }
+
+  .sum-head,
+  .sum-cell {
+    width: 22px;
+    min-width: 22px;
+    max-width: 22px;
+  }
+
+  .member-head-cell.horizontal-name,
+  .matrix-symbol-cell {
+    width: 36px;
+    min-width: 36px;
+    max-width: 36px;
+  }
+}

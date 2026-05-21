@@ -715,38 +715,56 @@ export default function App() {
             <div className="panel panel-header"><div><h2>希望マトリックス</h2><p>作品タイトル列だけ固定し、右側と上下を表の中でスクロールできます。</p></div></div>
             <div className="panel matrix-panel">
               <div className="matrix-hint">タイトル列は固定、右側は横スクロール、表全体は上下スクロールできます。</div>
-              <div className="split-matrix">
-                <div className="matrix-fixed">
-                  <table className="fixed-table">
-                    <thead><tr><th className="work-head-fixed">作品</th></tr></thead>
-                    <tbody>
-                      {visibleWorks.map((work) => (
-                        <tr key={`fixed-${work.id}`}>
-                          <td className="work-title-fixed"><button className="matrix-work-link" onClick={() => { setSelectedWorkId(work.id); setActiveTab('works') }}>{work.title}</button></td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-                <div className="matrix-scroll">
-                  <table className="scroll-table">
-                    <thead><tr><th className="sum-head">○</th><th className="sum-head">△</th><th className="sum-head">×</th>{members.map((member) => <th key={member.id} className="member-head-cell horizontal-name">{member.name}</th>)}</tr></thead>
-                    <tbody>
-                      {visibleWorks.map((work) => {
-                        const stats = workStats.get(work.id) || { wanted: 0, neutral: 0, played: 0 }
-                        return (
-                          <tr key={`scroll-${work.id}`}>
-                            <td className="sum-cell wanted-total">{stats.wanted}</td>
-                            <td className="sum-cell neutral-total">{stats.neutral}</td>
-                            <td className="sum-cell played-total">{stats.played}</td>
-                            {members.map((member) => <td key={`${work.id}-${member.id}`} className={`matrix-symbol-cell ${getWorkSymbolClass(member, work.id)}`}>{getWorkSymbol(member, work.id)}</td>)}
-                          </tr>
-                        )
-                      })}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
+              <div className="matrix-scroll-shell">
+  <table className="matrix-table">
+    <thead>
+      <tr>
+        <th className="corner-cell">作品</th>
+        <th className="sum-head">○</th>
+        <th className="sum-head">△</th>
+        <th className="sum-head">×</th>
+        {members.map((member) => (
+          <th key={member.id} className="member-head-cell horizontal-name">
+            {member.name}
+          </th>
+        ))}
+      </tr>
+    </thead>
+    <tbody>
+      {visibleWorks.map((work) => {
+        const stats = workStats.get(work.id) || { wanted: 0, neutral: 0, played: 0 }
+        return (
+          <tr key={work.id}>
+            <th scope="row" className="work-title-cell">
+              <button
+                className="matrix-work-link"
+                onClick={() => {
+                  setSelectedWorkId(work.id)
+                  setActiveTab('works')
+                }}
+              >
+                {work.title}
+              </button>
+            </th>
+
+            <td className="sum-cell wanted-total">{stats.wanted}</td>
+            <td className="sum-cell neutral-total">{stats.neutral}</td>
+            <td className="sum-cell played-total">{stats.played}</td>
+
+            {members.map((member) => (
+              <td
+                key={`${work.id}-${member.id}`}
+                className={`matrix-symbol-cell ${getWorkSymbolClass(member, work.id)}`}
+              >
+                {getWorkSymbol(member, work.id)}
+              </td>
+            ))}
+          </tr>
+        )
+      })}
+    </tbody>
+  </table>
+</div>
             </div>
           </section>
         )}
