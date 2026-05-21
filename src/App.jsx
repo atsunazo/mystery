@@ -716,6 +716,7 @@ export default function App() {
             <div className="panel matrix-panel">
               <div className="matrix-hint">タイトル列は固定、右側は横スクロール、表全体は上下スクロールできます。</div>
               <div className="matrix-scroll-shell">
+              <div className="matrix-left-curtain" aria-hidden="true" />
   <table className="matrix-table">
     <thead>
       <tr>
