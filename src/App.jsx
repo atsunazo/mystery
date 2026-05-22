@@ -564,7 +564,7 @@ export default function App() {
           <p className="hero-copy">スマホで入力しやすいように、ホームから共有・参加者追加・日付調整・募集中の確認へ進めます。</p>
         </div>
         <div className="hero-actions">
-          <button className="primary-button" onClick={openAddMember}>人を追加</button>
+          <button className="primary-button" onClick={openAddMember}>参加者を追加</button>
           <button className="secondary-button" onClick={openAddWork}>作品を追加</button>
         </div>
       </header>
@@ -580,22 +580,8 @@ export default function App() {
       <main className="main-content">
         {activeTab === 'home' && (
           <section className="panel-stack">
-            <section className="panel slim-panel">
-              <div className="panel-title-row">
-                <div><h2>共有URL</h2><p>このURLを参加者に送ると、同じ調整ページを開けます。</p></div>
-                <button className="secondary-button" onClick={copyShareUrl}>コピー</button>
-              </div>
-              <div className="url-box">{shareUrl}</div>
-            </section>
-
-            <section className="quick-grid">
-              <button className="quick-card" onClick={openAddMember}>人を追加</button>
-              <button className="quick-card" onClick={() => setActiveTab('dates')}>日付を追加</button>
-              <button className="quick-card" onClick={() => setActiveTab('works')}>作品を見る</button>
-              <button className="quick-card" onClick={() => setActiveTab('matrix')}>表で確認</button>
-            </section>
-
-            <section className="panel slim-panel">
+           
+                        <section className="panel slim-panel">
               <h2>今募集している作品</h2>
               <p>候補日時が入っている作品だけ表示します。</p>
               {activeRecruitments.length === 0 ? <div className="empty-mini">まだ募集はありません。</div> : (
@@ -640,6 +626,16 @@ export default function App() {
                 </div>
               )}
             </section>
+
+
+             <section className="panel slim-panel">
+              <div className="panel-title-row">
+                <div><h2>共有URL</h2><p>このURLを参加者に送ると、同じ調整ページを開けます。</p></div>
+                <button className="secondary-button" onClick={copyShareUrl}>コピー</button>
+              </div>
+              <div className="url-box">{shareUrl}</div>
+            </section>
+
           </section>
         )}
 
@@ -709,10 +705,10 @@ export default function App() {
                 <div className="panel detail-header compact-detail">
                   <button className="ghost-button" onClick={() => setSelectedWorkId('')}>← 一覧へ</button>
                   <div className="detail-title-wrap"><h2>{selectedWork.title}</h2><p>{selectedWork.playerCountText}・{selectedWork.durationMin}分</p></div>
-                  <div className="detail-status-box"><span className="detail-count">○の人: {selectedWantedMembers.length}</span></div>
+                  <div className="detail-status-box"><span className="detail-count">○の参加者: {selectedWantedMembers.length}</span></div>
                 </div>
                 <div className="panel two-column-grid">
-                  <section className="sub-panel"><h3>日程調整に入る人（○のみ）</h3>{selectedWantedMembers.length === 0 ? <p>まだいません。</p> : <div className="list-stack">{selectedWantedMembers.map((member) => <button className="person-row as-button" key={member.id} onClick={() => openEditMember(member, 'dates')}><span>{member.name}</span><span className="person-tag wanted">○</span></button>)}</div>}</section>
+                  <section className="sub-panel"><h3>日程調整に入る参加者（○のみ）</h3>{selectedWantedMembers.length === 0 ? <p>まだいません。</p> : <div className="list-stack">{selectedWantedMembers.map((member) => <button className="person-row as-button" key={member.id} onClick={() => openEditMember(member, 'dates')}><span>{member.name}</span><span className="person-tag wanted">○</span></button>)}</div>}</section>
                   <section className="sub-panel"><h3>貸し出し可能</h3>{selectedWorkLenders.length === 0 ? <p>まだいません。</p> : <div className="list-stack">{selectedWorkLenders.map((member) => <button className="person-row as-button" key={member.id} onClick={() => openEditMember(member, 'works')}><span>{member.name}</span><span className="person-tag lend">貸出可</span></button>)}</div>}</section>
                 </div>
                 <div className="panel panel-header schedule-add-panel">
@@ -741,7 +737,7 @@ export default function App() {
                           <div className="work-date-head"><div><strong>{date.label}</strong><span>{isFirst ? '先着順' : '希望集計'}</span></div><button className="table-delete" onClick={() => removeWorkDate(date.id)}>削除</button></div>
                           {isFirst ? (
                             <div className="firstcome-box">
-                              <div className="entry-meter">{date.entryIds.length}/{selectedWork.playerMax || '-'}人</div>
+                              <div className="entry-meter">{date.entryIds.length}/{selectedWork.playerMax || '-'}参加者</div>
                               <div className="entry-list">{entryMembers.length === 0 ? 'まだ参加者はいません' : entryMembers.map((m) => <span key={m.id} className="entry-chip">{m.name}</span>)}</div>
                               {joined ? <button className="secondary-button wide" onClick={() => cancelFirstCome(date)}>キャンセルする</button> : <button className="primary-button wide" disabled={full} onClick={() => joinFirstCome(date)}>{full ? '満員です' : '参加する'}</button>}
                             </div>
