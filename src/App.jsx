@@ -619,8 +619,8 @@ export default function App() {
               )}
             </section>
             <section className="panel slim-panel">
-              <h2>日付からできる作品</h2>
-              <p>日付候補ごとに、<strong>希望○</strong>の人でできそうな作品を確認できます。</p>
+              <h2>日付から調整</h2>
+              <p>日付候補ごとに、参加できるか回答してください。<strong>希望○</strong>の人でできそうな作品を確認できます。</p>
               {groupDates.length === 0 ? <div className="empty-mini">日程タブで日付候補を追加してください。</div> : (
                 <div className="date-card-list">
                   {groupDates.map((date) => {
