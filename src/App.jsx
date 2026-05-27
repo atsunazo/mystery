@@ -89,6 +89,14 @@ function countGroupDateVotes(members, dateId) {
   return counts
 }
 
+function getTodayDate() {
+  const now = new Date();
+  const offset = now.getTimezoneOffset();
+  return new Date(now.getTime() - offset * 60 * 1000)
+    .toISOString()
+    .slice(0, 10);
+}
+
 export default function App() {
   const [eventId, setEventId] = useState(getEventIdFromUrl())
   const [eventName, setEventName] = useState('')
@@ -119,15 +127,6 @@ export default function App() {
   const matrixHeaderScrollRef = useRef(null)
   const matrixLeftScrollRef = useRef(null)
 
-
-  function getTodayDate() {
-    const now = new Date();
-    const offset = now.getTimezoneOffset();
-    return new Date(now.getTime() - offset * 60 * 1000)
-      .toISOString()
-      .slice(0, 10);
-  }
-  
   function syncMatrixScroll(event) {
     const target = event.currentTarget
     if (matrixHeaderScrollRef.current) matrixHeaderScrollRef.current.scrollLeft = target.scrollLeft
