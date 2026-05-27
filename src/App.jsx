@@ -97,28 +97,6 @@ function getTodayDate() {
     .slice(0, 10);
 }
 
-export default function App() {
-  const [eventId, setEventId] = useState(getEventIdFromUrl())
-  const [eventName, setEventName] = useState('')
-  const [newEventName, setNewEventName] = useState('')
-  const [members, setMembers] = useState([])
-  const [customWorks, setCustomWorks] = useState([])
-  const [groupDates, setGroupDates] = useState([])
-  const [activeTab, setActiveTab] = useState('home')
-  const [editorOpen, setEditorOpen] = useState(false)
-  const [draft, setDraft] = useState(createMemberDraft())
-  const [mobileSection, setMobileSection] = useState('summary')
-  const [memberWorkSearch, setMemberWorkSearch] = useState('')
-  const [workSearch, setWorkSearch] = useState('')
-  const [selectedWorkId, setSelectedWorkId] = useState('')
-  const [workDates, setWorkDates] = 
-function getTodayDate() {
-  const now = new Date();
-  const offset = now.getTimezoneOffset();
-  return new Date(now.getTime() - offset * 60 * 1000)
-    .toISOString()
-    .slice(0, 10);
-}
 
 export default function App() {
   const [eventId, setEventId] = useState(getEventIdFromUrl())
