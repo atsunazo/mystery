@@ -112,7 +112,7 @@ export default function App() {
   const [workSearch, setWorkSearch] = useState('')
   const [selectedWorkId, setSelectedWorkId] = useState('')
   const [workDates, setWorkDates] = useState(getTodayDate)
-  const [newWorkDate, setNewWorkDate] = useState(getTodayDate)
+  const [newWorkDate, setNewWorkDate] = useState('')
   const [newWorkHour, setNewWorkHour] = useState('13')
   const [newWorkMinute, setNewWorkMinute] = useState('00')
   const [newWorkMode, setNewWorkMode] = useState('vote')
