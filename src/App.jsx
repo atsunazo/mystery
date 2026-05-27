@@ -591,7 +591,7 @@ export default function App() {
         <div>
           <p className="eyebrow">Murder Mystery Planner</p>
           <h1>{eventName}</h1>
-          <p className="hero-copy">【参加者を追加】からお名前と作品の希望を入れてください。</p>
+          <p className="hero-copy">【参加者を追加】からハンドルネームと作品の希望を入れてください。</p>
         </div>
         <div className="hero-actions">
           <button className="primary-button" onClick={openAddMember}>参加者を追加</button>
