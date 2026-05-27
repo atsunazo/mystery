@@ -127,20 +127,6 @@ export default function App() {
   const [activeMemberId, setActiveMemberId] = useState('')
   const matrixHeaderScrollRef = useRef(null)
   const matrixLeftScrollRef = useRef(null)
-  const [newWorkDate, setNewWorkDate] = useState(getTodayDate)
-  const [newWorkHour, setNewWorkHour] = useState('13')
-  const [newWorkMinute, setNewWorkMinute] = useState('00')
-  const [newWorkMode, setNewWorkMode] = useState('vote')
-  const [workDateCounts, setWorkDateCounts] = useState({})
-  const [editorDatesMap, setEditorDatesMap] = useState({})
-  const [loadingMembers, setLoadingMembers] = useState(false)
-  const [workEditorOpen, setWorkEditorOpen] = useState(false)
-  const [workDraft, setWorkDraft] = useState(createWorkDraft())
-  const [newGroupDate, setNewGroupDate] = useState(getTodayDate)
-  const [selectedGroupDateId, setSelectedGroupDateId] = useState('')
-  const [activeMemberId, setActiveMemberId] = useState('')
-  const matrixHeaderScrollRef = useRef(null)
-  const matrixLeftScrollRef = useRef(null)
 
   function syncMatrixScroll(event) {
     const target = event.currentTarget
