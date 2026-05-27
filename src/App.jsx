@@ -121,7 +121,7 @@ export default function App() {
   const [loadingMembers, setLoadingMembers] = useState(false)
   const [workEditorOpen, setWorkEditorOpen] = useState(false)
   const [workDraft, setWorkDraft] = useState(createWorkDraft())
-  const [newGroupDate, setNewGroupDate] = useState(getTodayDate)
+  const [newGroupDate, setNewGroupDate] = useState('')
   const [selectedGroupDateId, setSelectedGroupDateId] = useState('')
   const [activeMemberId, setActiveMemberId] = useState('')
   const matrixHeaderScrollRef = useRef(null)
